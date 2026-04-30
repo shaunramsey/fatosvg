@@ -72,7 +72,7 @@ def arrowhead(bx, by, theta):
     t2y = by - multx * math.sin(theta - al)
     t3x = bx - multx * math.cos(theta + al)
     t3y = by - multx * math.sin(theta + al)
-    retval =  f'\t<polygon fill="{color}" stroke-width="1" points="{bx:.3f},{by:.3f} {t2x:.3f},{t2y:.3f} {t3x:.3f},{t3y:.3f}"/>'
+    retval =  f'\t<polygon fill="{color}" stroke-width="1" points="{bx:.3f},{by:.3f} {t2x:.3f},{t2y:.3f} {t3x:.3f},{t3y:.3f}"/>\n'
     return retval
 
 

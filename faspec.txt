@@ -1,0 +1,6 @@
+size 2 2
+# option displayAllStates
+# okay the rest are edgeds
+acc 11
+10 20 a
+10 11 

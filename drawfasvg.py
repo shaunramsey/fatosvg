@@ -41,73 +41,103 @@ def testWrites(file):
     # file.write( drawFrom("a", C, D))
     # file.write( drawFrom("a", D, C))
 
-# 30 units along a vector from 1 to the other
-# 100,100 is the vector so 100,100 + 30*rt2/2
-with open("test.svg", "w") as file:
- 
-    file.write( ds.frontmatter(600,600))
-    file.write( ds.arrowfromto(0,0,50,50, "straight") )
+if __name__ == "__main__":
+    width = 2
+    height = 2
+    displayAllStates = False
+
+    edges = []
+    states = {}
+    accept = []
+    with open("faspec.txt", "r") as file:
+        f = file.readlines()
+        for i in range(len(f)):
+            first = f[i].split()
+            if first[0] == "size" and len(first) > 2:
+                width = int(first[1])
+                height = int(first[2])
+            elif first[0] == "option" and len(first) > 1:
+                if first[1] == "displayAllStates":
+                    displayAllStates = True
+            elif first[0] == "#":
+                continue #ignore #
+            elif first[0] == "acc":
+                accept.append(first[1])
+            elif len(first) > 2:
+                edges.append((first[0], first[1], first[2]))
 
 
-    for i in range(5):
-        mypoly = f'\t<polygon fill="white" stroke-width="1" points="{100*i-10},0 {100*i},10, {100*i+10},0"/>'
-        file.write(mypoly)
-        mypoly = f'\t<polygon fill="white" stroke-width="1" points="0,{100*i-10} 10,{100*i}, 0,{100*i+10}"/>'
-        file.write(mypoly)
+    print(edges)  
 
-    pts = []
-    for i in range(4):
-        pts.append( (150*i+50, 50) )
-    for i in range(3):
-        pts.append( (150*i+125, 200) )
-    for i in range(4):
-        pts.append( (150*i+50, 300))
-    ct = 0
-    for i in pts:
-        ct += 1
-        file.write(drawState(f"{ct}",i))
+    print(f"Creating svg with width={width} and height={height}")
+  
+    out = ds.frontmatter(width*150+50, height*150+50) 
+    out += ds.arrowfromto(0,0,50,50, "straight") 
 
-    for i in range(len(pts)):
-        if i != 0 and i != 4:
-            file.write(drawFrom("a", pts[i], pts[i-1]))
-        if i != 4 and i != 0:
-            file.write(drawFrom("~~~", pts[i-1], pts[i]))
+    totalw = width*150 + 50
+    totalh = height*150 + 50
+    for i in range(totalw//100):
+        mypoly = f'\t<polygon fill="white" stroke-width="1" points="{100*i-10},0 {100*i},10, {100*i+10},0"/>\n'
+        out += mypoly
+    for i in range(totalh//100):
+        mypoly = f'\t<polygon fill="white" stroke-width="1" points="0,{100*i-10} 10,{100*i}, 0,{100*i+10}"/>\n'
+        out += mypoly
+
+    if displayAllStates:
+        pts = []
+        names = []
+        v = width # int( (width*150 - 50) / 150)
+        current_y = 50
+        hi = 1
+        while current_y < height*150+50:
+            for i in range(v):
+                pts.append( (150*i+50, current_y) )
+                names.append(f"{hi}{i}")
+            current_y += 150
+            hi += 1
+            if current_y >= height*150:
+                break
+            for i in range(v-1):
+                pts.append( (150*i+125, current_y) )
+                names.append(f"{hi}{i}")
+            current_y += 150
+            hi += 1
+        ct = 0
+        for i in range(len(pts)):
+            ct += 1
+            out += drawState(names[i], pts[i])
     
-    file.write(drawFrom("A", pts[1], pts[5]))
-    file.write(drawFrom("A", pts[5], pts[1]))
-    file.write(drawFrom("A", pts[2], pts[5]))
-    file.write(drawFrom("A", pts[5], pts[2]))
+    states = {}
+    for i in edges:
+        ax = int(i[0])%10 * 150 + 50
+        ay = int(i[0])/10 - 1
+       
+        if ay%2 != 0:
+            ax += 75
+        a = (ax, ay*150 + 50)
+        bx = int(i[1])%10 * 150 + 50
+        by = int(i[1])/10 -1
+        if by%2 != 0:
+            bx += 75
 
-    file.write(drawFrom("B", pts[7], pts[10]))
-    file.write(drawFrom("A", pts[1], pts[5]))
+        b = (bx, by*150 + 50)
+        print(i[2],a,b)
+        out += drawFrom(i[2],a,b)
+        states[i[0]] = a
+        states[i[1]] = b
 
+    for i in states.keys():
+        if i in accept:
+            out += drawState(i, states[i], True)
+            accept.remove(i)
+        else:
+            out += drawState(i, states[i], False)
+    for i in accept:
+        out += drawState(i, , True)
+    out += ds.backmatter()
 
+    print(out)
+        
+    with open("test.svg", "w") as file:
+        file.write(out)
 
-
-    #file.write( arrowfromto( B[0], B[1], A[0], A[1]))
-    #file.write( arrowfromto( A[0], A[1], B[0], B[1]))
-
-    # startx = 100+15*math.sqrt(2)
-    # endx = 200-15*math.sqrt(2)
-    # theta = math.atan2(endx-startx, endx-startx)
-
-    # file.write(stroke(startx, startx, endx, endx))
-    # file.write("\n")
-
-    # file.write(arrowhead(endx, endx, theta))
-    # file.write("\n")
-    #################################
-    # d = circleFromThreePoints(100,100, 200, 200, 150, 200)    
-
-    # startAngle = math.atan2(100 - d["y"], 100 - d["x"]) - 30/d["radius"]
-    # endAngle = math.atan2(200 - d["y"], 200 - d["x"]) + 30/d["radius"]
-
-    # a, sx, sy, ex,ey,sa, ea = arc(d["x"], d["y"], d["radius"], startAngle, endAngle, 1)
-    # file.write(a)
-    # file.write("\n")
-    # print(a, sx, sy, ex, ey, sa, ea)
-    # file.write(arrowhead(sx,sy,sa - math.pi / 2))
-    # #file.write(circle(sx,sy))
-    # file.write("\n")
-
-    file.write(ds.backmatter())
