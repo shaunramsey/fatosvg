@@ -1,6 +1,9 @@
-size 2 2
+size 3 2
 # option displayAllStates
-# okay the rest are edgeds
-acc 11
+# okay the rest are edges
+# aa*b
+acc 12
 10 20 a
-10 11 
+# 20 20 a
+20 11 b
+11 12 \0
