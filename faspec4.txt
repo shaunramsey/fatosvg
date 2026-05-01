@@ -1,0 +1,6 @@
+size 3 2
+option displayAllStates
+option displayTicMarks
+name 20 hr
+name 21 ha
+acc 21

@@ -27,7 +27,7 @@ arrows = """
 """
 import math
 
-color = "white"
+defaultColor = "#ffffff"
 SPACING = 150
 START_SPACING = 50
 ODD_LINE_SPACING = 0.5*SPACING
@@ -55,7 +55,18 @@ def getDimensions(width, height):
 def backmatter():
     return "</svg>"
 
-
+class Edge:
+    def __init__(self, i1, i2, name, textOffset, color, pos=None):
+        self.i1 = i1
+        self.i2 = i2
+        self.name = name
+        self.textOffset = textOffset
+        self.color = color
+        self.pos = pos
+    def __str__(self):
+        return f"Edge({self.i1}, {self.i2}, {self.name}, {self.textOffset}, {self.color}, {self.pos})"
+    def __repr__(self):
+        return self.__str__()
 
 
 #2d rot
@@ -77,18 +88,20 @@ def circleFromThreePoints(x1, y1, x2, y2, x3, y3):
     return d
 
 #given circle centers, and an arrow between them,
-def arrowhead(bx, by, theta):
+def arrowhead(bx, by, theta, strokeColor=None):
     multx = 10
     al = 0.5
+    if strokeColor == None:
+        strokeColor = defaultColor
     t2x = bx - multx * math.cos(theta - al) 
     t2y = by - multx * math.sin(theta - al)
     t3x = bx - multx * math.cos(theta + al)
     t3y = by - multx * math.sin(theta + al)
-    retval =  f'\t<polygon fill="{color}" stroke-width="1" points="{bx:.3f},{by:.3f} {t2x:.3f},{t2y:.3f} {t3x:.3f},{t3y:.3f}"/>\n'
+    retval =  f'\t<polygon fill="{strokeColor}" stroke-width="1" points="{bx:.3f},{by:.3f} {t2x:.3f},{t2y:.3f} {t3x:.3f},{t3y:.3f}"/>\n'
     return retval
 
 
-def arrowToSelf(cx, cy, name, textOffset, pos):
+def arrowToSelf(cx, cy, name, textOffset, pos, color):
     fontsize = 14
     r = 20 # circle radius
     offset = 44
@@ -124,17 +137,18 @@ def arrowToSelf(cx, cy, name, textOffset, pos):
     endAngle = math.atan2(cy - center_offset[1], cx - center_offset[0]) - r/30
     #print(f"Start: {startAngle} end: {endAngle}")
  
-    a, sx, sy, ex, ey, sa, ea = arc(center_offset[0], center_offset[1], 20, startAngle, endAngle, 0)
+    a, sx, sy, ex, ey, sa, ea = arc(center_offset[0], center_offset[1], 20, startAngle, endAngle, 0, color)
     f = a + "\n"
     # print(a, sx, sy, ex, ey, sa, ea)
-    a += arrowhead(ex, ey, ea + math.pi / 2 - 0.15) 
+    a += arrowhead(ex, ey, ea + math.pi / 2 - 0.15, color) 
+
     a += text(name, (label_offset[0] + textOffset[0], label_offset[1] + textOffset[1]), fontsize) 
 
     return a
 
 
 
-def arrowfromto(c1x, c1y, c2x, c2y, textOffset, name):
+def arrowfromto(c1x, c1y, c2x, c2y, textOffset, name, color):
     dx = (c2x - c1x)
     dy = (c2y - c1y)
 
@@ -173,43 +187,51 @@ def arrowfromto(c1x, c1y, c2x, c2y, textOffset, name):
     endAngle = math.atan2(c2y - d["y"], c2x - d["x"]) - 30/d["radius"]
     #print(f"Start: {startAngle} end: {endAngle}")
  
-    a, sx, sy, ex, ey, sa, ea = arc(d["x"], d["y"], d["radius"], startAngle, endAngle, 0)
+    a, sx, sy, ex, ey, sa, ea = arc(d["x"], d["y"], d["radius"], startAngle, endAngle, 0, color)
     f = a + "\n"
     # print(a, sx, sy, ex, ey, sa, ea)
-    a += arrowhead(ex, ey, ea + math.pi / 2) + "\n"
+    a += arrowhead(ex, ey, ea + math.pi / 2, color) + "\n"
     if name != None:
 
         #a += circle(px,py)
 
         offset = 7
-        a  += text(name, (hx - counterleft[0] * offset + textOffset[0], hy - counterleft[1] * offset + textOffset[1]), 14) + "\n"
+        a  += text(name, (hx - counterleft[0] * offset + textOffset[0], hy - counterleft[1] * offset + textOffset[1]), 14, color)
     return a
     #file.write(circle(sx,sy))
 
 
 
-def text(str, pos, size):
+def text(str, pos, size, textColor = None):
+    if textColor == None:
+         textColor = defaultColor
     fontsize = 22
     if size != None:
         fontsize = size
-    return f'\t<text fill="{color}" stroke="{color}" x="{pos[0]-0.3*fontsize*len(str):.3f}" y="{pos[1]+0.25*fontsize:.3f}" font-family="Courier New" font-size="{fontsize}">{str}</text>\n'
+    return f'\t<text fill="{textColor}" stroke="{textColor}" x="{pos[0]-0.3*fontsize*len(str):.3f}" y="{pos[1]+0.25*fontsize:.3f}" font-family="Courier New" font-size="{fontsize}">{str}</text>\n'
 
 def circle(cx, cy):
-    return f'\t<ellipse stroke="{color}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="30" ry="30"/>\n'
+    strokeColor = defaultColor
+    return f'\t<ellipse stroke="{strokeColor}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="30" ry="30"/>\n'
 
 
 def dblcircle(cx, cy):
-    v = f'\t<ellipse stroke="{color}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="30" ry="30"/>\n'
-    v += f'\n\t<ellipse stroke="{color}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="25" ry="25"/>\n'
+    strokeColor = defaultColor
+    v = f'\t<ellipse stroke="{strokeColor}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="30" ry="30"/>\n'
+    v += f'\n\t<ellipse stroke="{strokeColor}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="25" ry="25"/>\n'
     return v
 
-def stroke(ax, ay, bx, by):
-    return f'\t<polygon stroke="{color}" stroke-width="1" points="{ax:.3f},{ay:.3f} {bx:.3f},{by:.3f}"/>\n'
+def stroke(ax, ay, bx, by, strokeColor=None):
+    if strokeColor == None:
+        strokeColor = defaultColor
+    return f'\t<polygon stroke="{strokeColor}" stroke-width="1" points="{ax:.3f},{ay:.3f} {bx:.3f},{by:.3f}"/>\n'
 
 
-def arc(x, y, radius, startAngle, endAngle, isReversed):
+def arc(x, y, radius, startAngle, endAngle, isReversed, strokeColor=None):
     _svgData = ""
-    style = 'stroke="' + color + '" stroke-width="1" fill="none"'
+    if strokeColor == None:
+        strokeColor = defaultColor
+    style = 'stroke="' + strokeColor + '" stroke-width="1" fill="none"'
 
     if(endAngle - startAngle == math.pi * 2):
         _svgData += '\t<ellipse ' + style + ' cx="' + fixed(x, 3) + '" cy="' + fixed(y, 3) + '" rx="' + fixed(radius, 3) + '" ry="' + fixed(radius, 3) + '"/>\n'
@@ -245,11 +267,10 @@ def arc(x, y, radius, startAngle, endAngle, isReversed):
 def stateNumberToLocation(n):
     ax = int(n)%10 * SPACING + START_SPACING
     ay = int(n)//10 - 1
-    #print("stateNumber: ay=", ay)
     if ay%2 != 0:
         ax += ODD_LINE_SPACING
+    # print(f"stateNumber:{n} ax={ax} ay={ay*SPACING+START_SPACING}")
     return (ax, ay * SPACING + START_SPACING)
-
 
 def drawState(name, pos, names, accept=False):
     c = circle(pos[0], pos[1])
@@ -258,39 +279,60 @@ def drawState(name, pos, names, accept=False):
     stateName = name
     if name in names:
          stateName = names[name]
+         #print(f"Found name for {name} in names, using {stateName}")
     t = text(stateName, pos, 22)
     return c + t
 
 def drawEdge(edge, states):
-    i1 = edge[0]
-    i2 = edge[1]
-    name = edge[2]
-    textOffset = edge[3]
-    print(f"{i1} {i2} {name} TextOffset", textOffset)
-    pos = edge[4] if len(edge) > 4 else "S"
-    
-    return drawFrom(name, i1, i2, textOffset, pos, states)
+    return drawFrom(edge.name, edge.i1, edge.i2, edge.textOffset, edge.pos, edge.color, states)
 
-def drawFrom(name, i1, i2, textOffset, pos, states):
+def drawFrom(name, i1, i2, textOffset, pos, color, states):
     if(i1 == i2): # same state, draw a loop
         states[i1] = stateNumberToLocation(i1)
-        a = arrowToSelf(states[i1][0], states[i1][1], name, textOffset, pos)
+        a = arrowToSelf(states[i1][0], states[i1][1], name, textOffset, pos, color)
         return a
     
     a = stateNumberToLocation(i1)
     b = stateNumberToLocation(i2)
     states[i1] = a
     states[i2] = b
-    a = arrowfromto( a[0], a[1], b[0], b[1], textOffset, name)
+    a = arrowfromto( a[0], a[1], b[0], b[1], textOffset, name, color)
     return a
 
 def drawTicMarks(width, height, TIC_SPACE = 25, TIC_WIDTH = 5):
     totalw, totalh = getDimensions(width, height)
     out = ""
-    for i in range(totalw//TIC_SPACE + 1):
+    for i in range(int(totalw/TIC_SPACE + 1)):
         mypoly = f'\t<polygon fill="white" stroke-width="1" points="{TIC_SPACE*i-TIC_WIDTH},0 {TIC_SPACE*i},{TIC_WIDTH}, {TIC_SPACE*i+TIC_WIDTH},0"/>\n'
         out += mypoly
-    for i in range(totalh//TIC_SPACE + 1):
+    for i in range(int(totalh/TIC_SPACE + 1)):
         mypoly = f'\t<polygon fill="white" stroke-width="1" points="0,{TIC_SPACE*i-TIC_WIDTH} {TIC_WIDTH},{TIC_SPACE*i}, 0,{TIC_SPACE*i+TIC_WIDTH}"/>\n'
         out += mypoly
     return out
+
+def drawAllStates(width, height, nameLookup, acceptStates):
+    pts = []
+    names = []
+    print(" [*] DRAWING ALL STATES")
+    for i in range(0, height, 2):
+
+        for j in range(width):
+            pts.append( ( SPACING * j + START_SPACING, SPACING * i + START_SPACING) )
+            names.append(f"{i+1}{j}")
+      
+        if height%2 == 0:
+            for j in range(width-1):
+                pts.append( ( SPACING * j + START_SPACING + ODD_LINE_SPACING, SPACING * (i+1) + START_SPACING) )
+                names.append(f"{i+2}{j}")
+
+
+    out = ""
+    print(acceptStates)
+    for i in range(len(pts)):
+        if names[i] in acceptStates:
+            out += drawState(names[i], pts[i], nameLookup, True)
+        else:
+            out += drawState(names[i], pts[i], nameLookup, False)
+
+    return out
+

@@ -1,7 +1,6 @@
-# size 3 2
+size 3 2
 # option displayAllStates
-option displayTicMarks
-option extendWidth 44
+# option displayTicMarks
 # okay the rest are edges
 # b(b*+a*)
 name 10 A
@@ -18,11 +17,9 @@ acc 12
 textOffset -10 -15
 11 21 b
 21 21 b E
-textOffset -10 0
+colorSaturation 0.5
 20 20 a,b W
 acc 21
-color red
 21 20 a
 textOffset 45 -10
-color #9f9f9f
 12 20 b
