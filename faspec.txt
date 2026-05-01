@@ -1,9 +1,23 @@
 size 3 2
 # option displayAllStates
 # okay the rest are edges
-# aa*b
-acc 12
+# b(b*+a*)
+name 10 A
+name 11 B
+name 12 C
+name 20 hr
+name 21 D
+10 11 b
 10 20 a
-# 20 20 a
-20 11 b
-11 12 \0
+acc 11
+11 12 a
+12 12 a E
+acc 12
+textOffset -10 -15
+11 21 b
+21 21 b E
+20 20 a,b S
+acc 21
+21 20 a
+textOffset 45 -10
+12 20 b

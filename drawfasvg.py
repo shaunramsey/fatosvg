@@ -13,47 +13,6 @@ import math
 import drawsvg as ds	
 
 
-def drawState(name, pos, accept=False):
-    c = ds.circle(pos[0], pos[1])
-    if accept:
-        c = ds.dblcircle(pos[0], pos[1])
-    t = ds.text(name, pos, 22)
-    return c + "\n" + t + "\n"
-
-def drawFrom(name, pa, pb):
-     a = ds.arrowfromto( pa[0], pa[1], pb[0], pb[1], name)
-     return a
-
-def testWrites(file):
-    A = (100, 100)
-    nx = 200
-    B = (nx, 50)
-    C = (nx, nx+10)
-    D = (300, 300)
-    # file.write( drawState("A", A) )
-    # file.write( drawState("ha", B, True) )
-    # file.write( drawState("C", C))
-    # file.write( drawState("D", D))
-
-    # file.write( drawFrom("a", A, B))
-    # file.write( drawFrom("a", C, A))
-    # file.write( drawFrom("a", B, D))
-    # file.write( drawFrom("a", C, D))
-    # file.write( drawFrom("a", D, C))
-
-SPACING = 150
-START_SPACING = 50
-ODD_LINE_SPACING = 0.5*SPACING
-END_X_SPACING = 40 # must account for the state size ending
-END_Y_SPACING = 70
-def stateNumberToLocation(n):
-    ax = int(n)%10 * SPACING + START_SPACING
-    ay = int(n)//10 - 1
-    print("stateNumber: ay=", ay)
-    if ay%2 != 0:
-        ax += ODD_LINE_SPACING
-    return (ax, ay * SPACING + START_SPACING)
-
 if __name__ == "__main__":
     width = 2
     height = 2
@@ -61,7 +20,9 @@ if __name__ == "__main__":
 
     edges = []
     states = {}
+    names = {}
     accept = []
+    last_offset = (0, 0)
     with open("faspec.txt", "r") as file:
         f = file.readlines()
         for i in range(len(f)):
@@ -76,8 +37,19 @@ if __name__ == "__main__":
                 continue #ignore #
             elif first[0] == "acc":
                 accept.append(first[1])
+            elif first[0] == "name":
+                if len(first) > 2:
+                    names[first[1]] = first[2]
+            elif first[0] == "textOffset":
+                if len(first) > 2:
+                    last_offset = (int(first[1]), int(first[2])) 
             elif len(first) > 2:
-                edges.append((first[0], first[1], first[2]))
+                if len(first) > 3 and first[0] == first[1]: # edge that goes to itself
+                    edges.append((first[0], first[1], first[2], last_offset, first[3]))
+                    last_offset = (0,0)
+                else:
+                    edges.append((first[0], first[1], first[2], last_offset))
+                    last_offset = (0, 0)
 
 
     print(edges)  
@@ -85,20 +57,16 @@ if __name__ == "__main__":
     print(f"Creating svg with width={width} and height={height}")
   
 
-    out = ds.frontmatter((width-1)*SPACING + START_SPACING + END_X_SPACING, (height-1)*SPACING + START_SPACING + END_Y_SPACING) 
-    out += ds.arrowfromto(0,0,50,50, "straight") 
+    ds.SPACING = 150
+    ds.color = "white"
 
-    totalw = width*SPACING + START_SPACING
-    totalh = height*SPACING + START_SPACING
-    print(f"totalw,totalh = ({totalw}, {totalh})")
-    TIC_SPACE = 25
-    ARROW_WIDTH = 5
-    for i in range(totalw//TIC_SPACE + 1):
-        mypoly = f'\t<polygon fill="white" stroke-width="1" points="{TIC_SPACE*i-ARROW_WIDTH},0 {TIC_SPACE*i},{ARROW_WIDTH}, {TIC_SPACE*i+ARROW_WIDTH},0"/>\n'
-        out += mypoly
-    for i in range(totalh//TIC_SPACE + 1):
-        mypoly = f'\t<polygon fill="white" stroke-width="1" points="0,{TIC_SPACE*i-ARROW_WIDTH} {ARROW_WIDTH},{TIC_SPACE*i}, 0,{TIC_SPACE*i+ARROW_WIDTH}"/>\n'
-        out += mypoly
+    ##### DO WE HAVE A SOUTH FACING LOOP/ ARROW IN THE LAST ROW?
+    ds.END_Y_SPACING += 44
+    ds.END_X_SPACING += 44
+
+    out = ds.front(width,height)
+    out += ds.arrowfromto(0,0,50,50,(0,0), "straight") 
+    out += ds.drawTicMarks(width, height, 50)
 
     if displayAllStates:
         pts = []
@@ -122,43 +90,25 @@ if __name__ == "__main__":
         ct = 0
         for i in range(len(pts)):
             ct += 1
-            out += drawState(names[i], pts[i])
-    
-    states = {}
-    for i in edges:
-        a = stateNumberToLocation(i[0])
-        b = stateNumberToLocation(i[1])
-        print(i[2],a,b)
-        out += drawFrom(i[2],a,b)
-        states[i[0]] = a
-        states[i[1]] = b
+            out += ds.drawState(names[i], pts[i])
+    else:
+        states = {}
+        for i in edges:
+            out += ds.drawEdge(i, states) 
 
-    for i in states.keys():
-        if i in accept:
-            out += drawState(i, states[i], True)
-            accept.remove(i)
-        else:
-            out += drawState(i, states[i], False)
-    for i in accept:
-        print("drawing accept states",i, stateNumberToLocation(i))
-        out += drawState(i, stateNumberToLocation(i), True)
+        for i in states.keys():
+            if i in accept:
+                out += ds.drawState(i, states[i], names, True)
+                accept.remove(i)
+            else:
+                out += ds.drawState(i, states[i], names, False)
+                
+        for i in accept:
+            print("drawing accept states",i, ds.stateNumberToLocation(i))
+            out += ds.drawState(i, ds.stateNumberToLocation(i), names, True)
 
-    i = 20
-    l = stateNumberToLocation(i)
 
-    offset = 44
-    center_offset = (l[0]+offset,l[1]) # o bot +30, top is -30
-    center_offset = (l[0], l[1]+offset)
-    r = 20 # circle radius
-    startAngle = math.atan2(l[1] - center_offset[1], l[0] - center_offset[0]) + r/30
-    endAngle = math.atan2(l[1] - center_offset[1], l[0] - center_offset[0]) - r/30
-    #print(f"Start: {startAngle} end: {endAngle}")
- 
-    a, sx, sy, ex, ey, sa, ea = ds.arc(center_offset[0], center_offset[1], 20, startAngle, endAngle, 0)
-    f = a + "\n"
-    # print(a, sx, sy, ex, ey, sa, ea)
-    a += ds.arrowhead(ex, ey, ea + math.pi / 2 - 0.15) + "\n"
-    out += a
+
     out += ds.backmatter()
 
     # print(out)

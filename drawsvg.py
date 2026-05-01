@@ -28,6 +28,12 @@ arrows = """
 import math
 
 color = "white"
+SPACING = 150
+START_SPACING = 50
+ODD_LINE_SPACING = 0.5*SPACING
+END_X_SPACING = 40 # must account for the state size ending
+END_Y_SPACING = 40 # 84 allows for an end circle and text
+# END_Y_SPACING = 40
 
 def fixed(v, n):
     return f"{v:.3f}"
@@ -40,6 +46,12 @@ def frontmatter(width,height):
 <svg width="{width}" height="{height}" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
 """
+def front(width, height):
+   return frontmatter((width-1)*SPACING + START_SPACING + END_X_SPACING, (height-1)*SPACING + START_SPACING + END_Y_SPACING) 
+
+def getDimensions(width, height):
+    return ( (width-1)*SPACING + START_SPACING + END_X_SPACING, (height-1)*SPACING + START_SPACING + END_Y_SPACING)
+
 def backmatter():
     return "</svg>"
 
@@ -76,7 +88,53 @@ def arrowhead(bx, by, theta):
     return retval
 
 
-def arrowfromto(c1x, c1y, c2x, c2y, name):
+def arrowToSelf(cx, cy, name, textOffset, pos):
+    fontsize = 14
+    r = 20 # circle radius
+    offset = 44
+    labeloffset = offset + r + fontsize/2
+    center_offset = (cx+offset, cy) # o bot +30, top is -30
+    label_offset = (cx+labeloffset, cy)
+    if pos:
+        if pos == "S":
+                center_offset = (cx, cy + offset)
+                label_offset = (cx, cy + labeloffset)
+        elif pos == "W":
+                center_offset = (cx - offset, cy)
+                label_offset = (cx - labeloffset, cy)
+        elif pos == "N":
+                center_offset = (cx, cy - offset)
+                label_offset = (cx, cy - labeloffset)
+        elif pos == "NE":
+                center_offset = (cx + offset*math.cos(math.pi/4), cy - offset*math.sin(math.pi/4))
+                label_offset = (cx + labeloffset*math.cos(math.pi/4), cy - labeloffset*math.sin(math.pi/4)) 
+        elif pos == "NW":
+                center_offset = (cx - offset*math.cos(math.pi/4), cy - offset*math.sin(math.pi/4))
+                label_offset = (cx - labeloffset*math.cos(math.pi/4), cy - labeloffset*math.sin(math.pi/4))
+        elif pos == "SE":
+                center_offset = (cx + offset*math.cos(math.pi/4), cy + offset*math.sin(math.pi/4))
+                label_offset = (cx + labeloffset*math.cos(math.pi/4), cy + labeloffset*math.sin(math.pi/4))
+        elif pos == "SW":
+                center_offset = (cx - offset*math.cos(math.pi/4), cy + offset*math.sin(math.pi/4))
+                label_offset = (cx - labeloffset*math.cos(math.pi/4), cy + labeloffset*math.sin(math.pi/4))
+        
+        
+ 
+    startAngle = math.atan2(cy - center_offset[1], cx - center_offset[0]) + r/30
+    endAngle = math.atan2(cy - center_offset[1], cx - center_offset[0]) - r/30
+    #print(f"Start: {startAngle} end: {endAngle}")
+ 
+    a, sx, sy, ex, ey, sa, ea = arc(center_offset[0], center_offset[1], 20, startAngle, endAngle, 0)
+    f = a + "\n"
+    # print(a, sx, sy, ex, ey, sa, ea)
+    a += arrowhead(ex, ey, ea + math.pi / 2 - 0.15) 
+    a += text(name, (label_offset[0] + textOffset[0], label_offset[1] + textOffset[1]), fontsize) 
+
+    return a
+
+
+
+def arrowfromto(c1x, c1y, c2x, c2y, textOffset, name):
     dx = (c2x - c1x)
     dy = (c2y - c1y)
 
@@ -124,7 +182,7 @@ def arrowfromto(c1x, c1y, c2x, c2y, name):
         #a += circle(px,py)
 
         offset = 7
-        a  += text(name, (hx - counterleft[0] * offset, hy - counterleft[1] * offset), 14) + "\n"
+        a  += text(name, (hx - counterleft[0] * offset + textOffset[0], hy - counterleft[1] * offset + textOffset[1]), 14) + "\n"
     return a
     #file.write(circle(sx,sy))
 
@@ -134,7 +192,7 @@ def text(str, pos, size):
     fontsize = 22
     if size != None:
         fontsize = size
-    return f'\t<text fill="{color}" stroke="{color}" x="{pos[0]-0.3*fontsize*len(str):.3f}" y="{pos[1]+0.25*fontsize:.3f}" font-family="Courier New" font-size="{fontsize}">{str}</text>'
+    return f'\t<text fill="{color}" stroke="{color}" x="{pos[0]-0.3*fontsize*len(str):.3f}" y="{pos[1]+0.25*fontsize:.3f}" font-family="Courier New" font-size="{fontsize}">{str}</text>\n'
 
 def circle(cx, cy):
     return f'\t<ellipse stroke="{color}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="30" ry="30"/>\n'
@@ -154,14 +212,14 @@ def arc(x, y, radius, startAngle, endAngle, isReversed):
     style = 'stroke="' + color + '" stroke-width="1" fill="none"'
 
     if(endAngle - startAngle == math.pi * 2):
-        _svgData += '\t<ellipse ' + style + ' cx="' + fixed(x, 3) + '" cy="' + fixed(y, 3) + '" rx="' + fixed(radius, 3) + '" ry="' + fixed(radius, 3) + '"/>\n';
+        _svgData += '\t<ellipse ' + style + ' cx="' + fixed(x, 3) + '" cy="' + fixed(y, 3) + '" rx="' + fixed(radius, 3) + '" ry="' + fixed(radius, 3) + '"/>\n'
     else:
         if(isReversed):
             startAngle, endAngle = endAngle, startAngle
 
         if(endAngle < startAngle):
             endAngle += math.pi * 2
-        print(startAngle, endAngle)
+        # print(startAngle, endAngle)
 
         startX = x + radius * math.cos(startAngle)
         startY = y + radius * math.sin(startAngle)
@@ -183,3 +241,56 @@ def arc(x, y, radius, startAngle, endAngle, isReversed):
         _svgData += fixed(endX, 3) + ',' + fixed(endY, 3) #  endPoint(endX, endY)
         _svgData += '"/>\n'
         return (_svgData, startX, startY, endX, endY, startAngle, endAngle)
+    
+def stateNumberToLocation(n):
+    ax = int(n)%10 * SPACING + START_SPACING
+    ay = int(n)//10 - 1
+    #print("stateNumber: ay=", ay)
+    if ay%2 != 0:
+        ax += ODD_LINE_SPACING
+    return (ax, ay * SPACING + START_SPACING)
+
+
+def drawState(name, pos, names, accept=False):
+    c = circle(pos[0], pos[1])
+    if accept:
+        c = dblcircle(pos[0], pos[1])
+    stateName = name
+    if name in names:
+         stateName = names[name]
+    t = text(stateName, pos, 22)
+    return c + t
+
+def drawEdge(edge, states):
+    i1 = edge[0]
+    i2 = edge[1]
+    name = edge[2]
+    textOffset = edge[3]
+    print(f"{i1} {i2} {name} TextOffset", textOffset)
+    pos = edge[4] if len(edge) > 4 else "S"
+    
+    return drawFrom(name, i1, i2, textOffset, pos, states)
+
+def drawFrom(name, i1, i2, textOffset, pos, states):
+    if(i1 == i2): # same state, draw a loop
+        states[i1] = stateNumberToLocation(i1)
+        a = arrowToSelf(states[i1][0], states[i1][1], name, textOffset, pos)
+        return a
+    
+    a = stateNumberToLocation(i1)
+    b = stateNumberToLocation(i2)
+    states[i1] = a
+    states[i2] = b
+    a = arrowfromto( a[0], a[1], b[0], b[1], textOffset, name)
+    return a
+
+def drawTicMarks(width, height, TIC_SPACE = 25, TIC_WIDTH = 5):
+    totalw, totalh = getDimensions(width, height)
+    out = ""
+    for i in range(totalw//TIC_SPACE + 1):
+        mypoly = f'\t<polygon fill="white" stroke-width="1" points="{TIC_SPACE*i-TIC_WIDTH},0 {TIC_SPACE*i},{TIC_WIDTH}, {TIC_SPACE*i+TIC_WIDTH},0"/>\n'
+        out += mypoly
+    for i in range(totalh//TIC_SPACE + 1):
+        mypoly = f'\t<polygon fill="white" stroke-width="1" points="0,{TIC_SPACE*i-TIC_WIDTH} {TIC_WIDTH},{TIC_SPACE*i}, 0,{TIC_SPACE*i+TIC_WIDTH}"/>\n'
+        out += mypoly
+    return out

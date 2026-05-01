@@ -1,0 +1,9 @@
+size 3 2
+# option displayAllStates
+# okay the rest are edges
+# aa*b
+acc 12
+10 20 a
+20 20 a
+20 11 b
+11 12 \0
