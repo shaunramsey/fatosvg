@@ -55,14 +55,32 @@ def getDimensions(width, height):
 def backmatter():
     return "</svg>"
 
+def nameToPosition(name, invnames, positions):
+
+    pos = None
+    if name in invnames:
+        stateNum = invnames[name]
+        pos = stateNumberToLocation(stateNum)
+    else: # find the first open position in positions
+        for p in positions.keys():
+            if not positions[p][0]: # if this position is not taken
+                pos = positions[p][1]
+                positions[p][0] = True # mark it as taken
+                invnames[name] = int(p) # assign this name to this position
+                break
+    print(f"nameToPosition: name={name}, pos={pos}, invnames={invnames}, positions={positions}")
+    return pos
+         
+
 class Edge:
     def __init__(self, i1, i2, name, textOffset, color, pos=None):
         self.i1 = i1
-        self.i2 = i2
+        self.i2 = i2 # this could the node's name
         self.name = name
         self.textOffset = textOffset
         self.color = color
         self.pos = pos
+
     def __str__(self):
         return f"Edge({self.i1}, {self.i2}, {self.name}, {self.textOffset}, {self.color}, {self.pos})"
     def __repr__(self):
@@ -283,17 +301,26 @@ def drawState(name, pos, names, accept=False):
     t = text(stateName, pos, 22)
     return c + t
 
-def drawEdge(edge, states):
-    return drawFrom(edge.name, edge.i1, edge.i2, edge.textOffset, edge.pos, edge.color, states)
+def drawEdge(edge, invnames, positions, states):
+    return drawFrom(edge, invnames, positions, states)
 
-def drawFrom(name, i1, i2, textOffset, pos, color, states):
+def drawFrom(edge, invnames, positions, states):
+    name = edge.name
+    i1 = edge.i1
+    i2 = edge.i2
+    textOffset = edge.textOffset
+    pos = edge.pos
+    color = edge.color
+
+    if i1 == None or i2 == None:
+         return
     if(i1 == i2): # same state, draw a loop
-        states[i1] = stateNumberToLocation(i1)
+        states[i1] = nameToPosition(i1, invnames, positions)
         a = arrowToSelf(states[i1][0], states[i1][1], name, textOffset, pos, color)
         return a
     
-    a = stateNumberToLocation(i1)
-    b = stateNumberToLocation(i2)
+    a = nameToPosition(i1, invnames, positions)
+    b = nameToPosition(i2, invnames, positions)
     states[i1] = a
     states[i2] = b
     a = arrowfromto( a[0], a[1], b[0], b[1], textOffset, name, color)

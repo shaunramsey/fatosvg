@@ -5,6 +5,11 @@ option displayTicMarks
 option extendWidth 44
 # okay the rest are edges
 # b(b*+a*)
+name 10 A
+name 11 B
+name 12 C
+name 20 hr
+name 21 D
 A B b
 A hr a
 acc B

@@ -22,13 +22,15 @@ if __name__ == "__main__":
     height = -1
     displayAllStates = False
     displayTicMarks = False
+    inferSize = True
 
     ds.SPACING = 150
     ds.color = "white"
 
     edges = []
     states = {}
-    names = {}
+    names = {} #look up the position to get the name
+    invnames = {} #look up name to get the position
     accept = {}
     last_offset = (0, 0)
     color_saturation = 1
@@ -40,30 +42,30 @@ if __name__ == "__main__":
             if first[0] == "size" and len(first) > 2:
                 width = int(first[1])
                 height = int(first[2])
+            elif first[0] == "#":
+                continue #ignore #
             elif first[0] == "option" and len(first) > 1:
                 if first[1] == "displayAllStates":
                     displayAllStates = True
                 if first[1] == "displayTicMarks":
                     displayTicMarks = True
+                if first[1] == "inferSize":
+                    inferSize = True
                 if first[1] == "extendWidth" and len(first) > 2:
                     ds.END_X_SPACING += int(first[2])
                 if first[1] == "extendHeight" and len(first) > 2:
                     ds.END_Y_SPACING += int(first[2])
-            elif first[0] == "#":
-                continue #ignore #
+
             elif first[0] == "acc":
                 accept[first[1]] = True
             elif first[0] == "name":
                 if len(first) > 2:
                     names[first[1]] = first[2]
+                    invnames[first[2]] = first[1]
             elif first[0] == "textOffset":
                 if len(first) > 2:
                     last_offset = (int(first[1]), int(first[2]))
                     #print(last_offset)
-            elif first[0] == "colorSaturation":
-                if len(first) > 1:
-                    color_saturation = float(first[1])
-                    #print(color_saturation)
             elif first[0] == "color":
                 if len(first) > 1:
                     color = first[1]
@@ -82,22 +84,66 @@ if __name__ == "__main__":
                     last_offset = (0, 0)
                     color_saturation = 1
                     color = "#ffffff"
-    if width == -1: #infer width from largest %10 value
+
+
+
+    # we may infer size from positions in names
+    # num_states = 1,2 then 1x1
+    # num_states = 3,  then 2x2
+    # num_states = 4,5 then 3x2
+    # num_states = 6,7 then 4x2
+    num_states = {}
+    num_states[1] = (1,1)
+    num_states[2] = (1,1)
+    num_states[3] = (2,2)
+    num_states[4] = (3,2)
+    num_states[5] = (3,2)
+    num_states[6] = (4,2)
+    num_states[7] = (4,2)
+
+
+    if width == -1 or inferSize: #infer width from largest %10 value
         max_state = 0
-        for e in edges:
-            w1 = int(e.i1)%10
-            w2 = int(e.i2)%10
-            if (int(e.i1)//10)%2 == 0:
+        for n in names.keys():
+            w1 = int(n)%10
+            if (int(n)//10)%2 == 0:
                 w1 += 0.5
-            if (int(e.i2)//10)%2 == 0:
-                w2 += 0.5
-            max_state = max(max_state, max(w1, w2))
+            max_state = max(max_state, w1)
         width = max_state + 1 # value 12 means width 3
-    if height == -1: #infer height from largest /10 value
+    if height == -1 or inferSize: #infer height from largest /10 value
         max_state = 0
-        for e in edges:
-            max_state = max(max_state, max(int(e.i1)//10, int(e.i2)//10))
+        for n in names.keys():
+            print(n, int(n)//10)
+            max_state = max(max_state, int(n)//10)
         height = max_state
+    
+    # walk through edges and figure out how many unique names there are
+    unique_names = {}
+    for i in edges:
+        unique_names[i.i1] = True
+        unique_names[i.i2] = True
+
+    width = max(width, num_states[len(unique_names)][0])
+    height = max(height, num_states[len(unique_names)][1])
+    # this is the width/height based on  if 'name' was listed for each state
+    print("inferred or given width/height is now ", width, height)
+    positions = {}
+    for j in range(height):
+        w = width if j%2 == 0 else width-1
+        for i in range(w):
+            positions[f"{j+1}{i}"] = [False, ds.stateNumberToLocation(10+j*10+i)]
+    # print("pos:", positions)
+
+    for i in names:
+        if i in positions:
+            positions[i][0] = True
+        else:
+            raise Exception(f"Error: name {i} is not in a valid position")
+            print(f"Warning: name {i} is not in positions")
+
+    # print(f"positions: {positions}, names: {names}")
+
+
 
 
     #print(edges)  
@@ -118,12 +164,14 @@ if __name__ == "__main__":
     else:
         states = {}
         for i in edges:
-            out += ds.drawEdge(i, states)
+            print("drawing edge:", i.name, i)
+            out += ds.drawEdge(i, invnames, positions, states)
+        print("states:", states)
         for i in states.keys():
             if i not in accept:
                 out += ds.drawState(i, states[i], names, False)                
         for i in accept:
-            out += ds.drawState(i, ds.stateNumberToLocation(i), names, True)
+            out += ds.drawState(i, ds.nameToPosition(i, invnames, positions), names, True)
 
 
 
