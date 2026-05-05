@@ -1,30 +1,6 @@
 # This file contains the helper functions to create an svg
 # there are primitives here directly dedicated to drawing an svg
 
-"""
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "https://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-
-<svg width="800" height="600" version="1.1" xmlns="http://www.w3.org/2000/svg">
-	<ellipse stroke="black" stroke-width="1" fill="none" cx="287.5" cy="129.5" rx="30" ry="30"/>
-	<ellipse stroke="black" stroke-width="1" fill="none" cx="160.5" cy="140.5" rx="30" ry="30"/>
-	<polygon stroke="black" stroke-width="1" points="36.5,88.5 132.834,128.898"/>
-	<polygon fill="black" stroke-width="1" points="132.834,128.898 127.39,121.193 123.523,130.415"/>
-	<path stroke="black" stroke-width="1" fill="none" d="M 269.123,152.958 A 74.78,74.78 0 0 1 182.637,160.449"/>
-	<polygon fill="black" stroke-width="1" points="269.123,152.958 259.791,154.34 266.276,161.952"/>
-</svg>
-"""
-
-
-arrows = """
-    <polygon stroke="white" stroke-width="1" points="36.5,88.5 132.834,128.898"/>
-	
-	<polygon fill="white" stroke-width="1" points="132.834,128.898 127.39,121.193 123.523,130.415"/>
-	<path stroke="white" stroke-width="1" fill="none" d="M 269.123,152.958 A 74.78,74.78 0 0 1 182.637,160.449"/>
-    
-    <polygon fill="white" stroke-width="1" points="269.123,152.958 259.791,154.34 266.276,161.952"/>
-
-"""
 import math
 
 defaultColor = "#ffffff"
@@ -68,15 +44,16 @@ def nameToPosition(name, invnames, positions):
                 positions[p][0] = True # mark it as taken
                 invnames[name] = int(p) # assign this name to this position
                 break
-    print(f"nameToPosition: name={name}, pos={pos}, invnames={invnames}, positions={positions}")
+    # print(f"nameToPosition: name={name}, pos={pos}, invnames={invnames}, positions={positions}")
     return pos
          
 
 class Edge:
-    def __init__(self, i1, i2, name, textOffset, color, pos=None):
+    def __init__(self, i1, i2, name, textOffset, textPct, color, pos=None):
         self.i1 = i1
         self.i2 = i2 # this could the node's name
         self.name = name
+        self.textPercentage = textPct
         self.textOffset = textOffset
         self.color = color
         self.pos = pos
@@ -166,7 +143,7 @@ def arrowToSelf(cx, cy, name, textOffset, pos, color):
 
 
 
-def arrowfromto(c1x, c1y, c2x, c2y, textOffset, name, color):
+def arrowfromto(c1x, c1y, c2x, c2y, textOffset, textPercentage, name, color):
     dx = (c2x - c1x)
     dy = (c2y - c1y)
 
@@ -210,11 +187,16 @@ def arrowfromto(c1x, c1y, c2x, c2y, textOffset, name, color):
     # print(a, sx, sy, ex, ey, sa, ea)
     a += arrowhead(ex, ey, ea + math.pi / 2, color) + "\n"
     if name != None:
-
-        #a += circle(px,py)
-
-        offset = 7
-        a  += text(name, (hx - counterleft[0] * offset + textOffset[0], hy - counterleft[1] * offset + textOffset[1]), 14, color)
+        print(textPercentage, textOffset)
+        startX = d["x"] + d["radius"] * math.cos(startAngle*(1-textPercentage)+endAngle*textPercentage)
+        startY = d["y"] + d["radius"] * math.sin(startAngle*(1-textPercentage)+endAngle*textPercentage)
+        fontsize = 14
+        offset = fontsize * 0.8
+        normalOffset = (-counterleft[0]*offset, -counterleft[1]*offset)
+        finalTextPos = (startX + normalOffset[0] + textOffset[0], startY + normalOffset[1] + textOffset[1])
+        print(startX,startY,hx-counterleft[0]*offset+textOffset[0], hy-counterleft[1] *offset + textOffset[1])
+        a += text(name, finalTextPos, fontsize, color)
+        #a  += text(name, (hx - counterleft[0] * offset + textOffset[0], hy - counterleft[1] * offset + textOffset[1]), 14, color)
     return a
     #file.write(circle(sx,sy))
 
@@ -226,7 +208,16 @@ def text(str, pos, size, textColor = None):
     fontsize = 22
     if size != None:
         fontsize = size
-    return f'\t<text fill="{textColor}" stroke="{textColor}" x="{pos[0]-0.3*fontsize*len(str):.3f}" y="{pos[1]+0.25*fontsize:.3f}" font-family="Courier New" font-size="{fontsize}">{str}</text>\n'
+    part = str.split("|")
+    out = ""
+    ctr = 0
+    start = pos[1] - (len(part)/2 - 0.5)*fontsize
+    for p in part:
+        # if ctr != len(part) - 1:
+        #      p += ","
+        out += f'\t<text fill="{textColor}" stroke="{textColor}" x="{pos[0]-0.3*fontsize*len(p):.3f}" y="{start+0.25*fontsize + fontsize*ctr:.3f}" font-family="Courier New" font-size="{fontsize}">{p}</text>\n'
+        ctr += 1
+    return out
 
 def circle(cx, cy):
     strokeColor = defaultColor
@@ -309,6 +300,7 @@ def drawFrom(edge, invnames, positions, states):
     i1 = edge.i1
     i2 = edge.i2
     textOffset = edge.textOffset
+    textPct = edge.textPercentage
     pos = edge.pos
     color = edge.color
 
@@ -323,7 +315,7 @@ def drawFrom(edge, invnames, positions, states):
     b = nameToPosition(i2, invnames, positions)
     states[i1] = a
     states[i2] = b
-    a = arrowfromto( a[0], a[1], b[0], b[1], textOffset, name, color)
+    a = arrowfromto( a[0], a[1], b[0], b[1], textOffset, textPct, name, color)
     return a
 
 def drawTicMarks(width, height, TIC_SPACE = 25, TIC_WIDTH = 5):

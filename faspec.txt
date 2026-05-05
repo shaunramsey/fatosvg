@@ -5,7 +5,13 @@ option displayTicMarks
 option extendWidth 44
 # okay the rest are edges
 # b(b*+a*)
-A B b
+name 20 hr
+textOffset 0 -5
+A B bbbbbbb|cat
+textPct 0.25
+B A b
+C B b
+D B b
 A hr a
 acc B
 B C a
@@ -15,7 +21,7 @@ textOffset -10 -15
 B D b
 D D b E
 textOffset -10 0
-hr hr a,b W
+hr hr a|b|d W
 acc D
 color red
 D hr a
