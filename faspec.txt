@@ -1,33 +1,9 @@
-# size 3 2
-# option displayAllStates
-option inferSize
-option displayTicMarks
-option extendWidth 44
-# okay the rest are edges
-# b(b*+a*)
-name 20 hr
-textOffset 0 -5
-A B bbbbbbb|cat
-textPct 0.25
-B A b
-C B b
-textPct 0.75
-D B b
-color #9999ff
-A hr a
+# a*b
+name 11 hr
+A A a S 
+A B b
 acc B
-B C a|b|c
-C C a E
-acc C
-textOffset -10 -15
-textPct 0.4
-B D b
-D D b E
+textOffset 5 0
+B hr a,b
 textOffset -10 0
-hr hr a|b|d W
-acc D
-color red
-D hr a
-textOffset 45 -10
-color #9f9f9f
-C hr b
+hr hr a,b W
