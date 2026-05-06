@@ -35,22 +35,24 @@
 	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 254.440,178.179 A 241.875,241.875 0 0 1 205.121,79.540"/>
 	<polygon fill="#ffffff" stroke-width="1" points="205.121,79.540 211.816,86.968 202.488,89.188"/>
 
-	<text fill="#ffffff" stroke="#ffffff" x="209.866" y="140.217" font-family="Courier New" font-size="14">b</text>
-	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 70.560,71.821 A 241.875,241.875 0 0 1 119.879,170.460"/>
-	<polygon fill="#ffffff" stroke-width="1" points="119.879,170.460 113.184,163.032 122.512,160.812"/>
+	<text fill="#ffffff" stroke="#ffffff" x="198.883" y="114.679" font-family="Courier New" font-size="14">b</text>
+	<path stroke="#9999ff" stroke-width="1" fill="none" d="M 70.560,71.821 A 241.875,241.875 0 0 1 119.879,170.460"/>
+	<polygon fill="#9999ff" stroke-width="1" points="119.879,170.460 113.184,163.032 122.512,160.812"/>
 
-	<text fill="#ffffff" stroke="#ffffff" x="106.734" y="116.783" font-family="Courier New" font-size="14">a</text>
+	<text fill="#9999ff" stroke="#9999ff" x="106.734" y="116.783" font-family="Courier New" font-size="14">a</text>
 	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 228.469,40.633 A 195.000,195.000 0 0 1 321.531,40.633"/>
 	<polygon fill="#ffffff" stroke-width="1" points="321.531,40.633 311.865,43.195 314.153,33.883"/>
 
-	<text fill="#ffffff" stroke="#ffffff" x="270.800" y="27.300" font-family="Courier New" font-size="14">a</text>
+	<text fill="#ffffff" stroke="#ffffff" x="270.800" y="13.300" font-family="Courier New" font-size="14">a</text>
+	<text fill="#ffffff" stroke="#ffffff" x="270.800" y="27.300" font-family="Courier New" font-size="14">b</text>
+	<text fill="#ffffff" stroke="#ffffff" x="270.800" y="41.300" font-family="Courier New" font-size="14">c</text>
 	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 378.282,37.633 A 20.000,20.000 0 1 1 378.282,62.367"/>
 	<polygon fill="#ffffff" stroke-width="1" points="378.282,62.367 387.961,64.881 381.396,71.870"/>
 	<text fill="#ffffff" stroke="#ffffff" x="416.800" y="53.500" font-family="Courier New" font-size="14">a</text>
 	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 220.560,71.821 A 241.875,241.875 0 0 1 269.879,170.460"/>
 	<polygon fill="#ffffff" stroke-width="1" points="269.879,170.460 263.184,163.032 272.512,160.812"/>
 
-	<text fill="#ffffff" stroke="#ffffff" x="246.734" y="101.783" font-family="Courier New" font-size="14">b</text>
+	<text fill="#ffffff" stroke="#ffffff" x="241.531" y="91.950" font-family="Courier New" font-size="14">b</text>
 	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 303.282,187.633 A 20.000,20.000 0 1 1 303.282,212.367"/>
 	<polygon fill="#ffffff" stroke-width="1" points="303.282,212.367 312.961,214.881 306.396,221.870"/>
 	<text fill="#ffffff" stroke="#ffffff" x="341.800" y="203.500" font-family="Courier New" font-size="14">b</text>

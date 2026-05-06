@@ -11,13 +11,16 @@ A B bbbbbbb|cat
 textPct 0.25
 B A b
 C B b
+textPct 0.75
 D B b
+color #9999ff
 A hr a
 acc B
-B C a
+B C a|b|c
 C C a E
 acc C
 textOffset -10 -15
+textPct 0.4
 B D b
 D D b E
 textOffset -10 0
