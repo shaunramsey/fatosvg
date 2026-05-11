@@ -1,9 +1,12 @@
 # a*b
 name 11 hr
-A A a S 
+name 20 C
+name 30 D
+A D e
+D A d
+C hr c
+hr C d
+A A a S
 A B b
 acc B
-textOffset 5 0
-B hr a,b
-textOffset -10 0
-hr hr a,b W
+C C 3 N

@@ -133,7 +133,7 @@ def arrowToSelf(cx, cy, name, textOffset, pos, color):
     #print(f"Start: {startAngle} end: {endAngle}")
  
     a, sx, sy, ex, ey, sa, ea = arc(center_offset[0], center_offset[1], 20, startAngle, endAngle, 0, color)
-    f = a + "\n"
+    # f = a 
     # print(a, sx, sy, ex, ey, sa, ea)
     a += arrowhead(ex, ey, ea + math.pi / 2 - 0.15, color) 
 
@@ -149,12 +149,13 @@ def arrowfromto(c1x, c1y, c2x, c2y, textOffset, textPercentage, name, color):
 
     size = math.sqrt(dx*dx+dy*dy)
     counterleft = (-dy / size, dx / size)
-    clockright = (dy / size, dx / size)
+    print(f"counter left is {counterleft}")
+    # clockright = (dy / size, dx / size)
     # -dy, dx is counter clockwise left
     hx = (c1x + c2x)*0.5
     hy = (c1y + c2y)*0.5 # half way point
 
-    offset = 15
+    offset = 65 #+ bendOffset
     px = hx - counterleft[0] * offset
     py = hy - counterleft[1] * offset
     s = 1
@@ -183,18 +184,28 @@ def arrowfromto(c1x, c1y, c2x, c2y, textOffset, textPercentage, name, color):
     #print(f"Start: {startAngle} end: {endAngle}")
  
     a, sx, sy, ex, ey, sa, ea = arc(d["x"], d["y"], d["radius"], startAngle, endAngle, 0, color)
-    f = a + "\n"
+    # f = a 
     # print(a, sx, sy, ex, ey, sa, ea)
-    a += arrowhead(ex, ey, ea + math.pi / 2, color) + "\n"
+    a += arrowhead(ex, ey, ea + math.pi / 2, color)
     if name != None:
-        print(textPercentage, textOffset)
+        print(textPercentage, textOffset, name)
+        print(f"halfx {hx}, {hy} angles {startAngle} {endAngle}")
+        print(f"weighted: {startAngle*(1-textPercentage)+endAngle*textPercentage}")
+
+        while endAngle < startAngle:
+             endAngle += 2* math.pi
+        print(f"weighted: {startAngle*(1-textPercentage)+endAngle*textPercentage}")
+        
         startX = d["x"] + d["radius"] * math.cos(startAngle*(1-textPercentage)+endAngle*textPercentage)
         startY = d["y"] + d["radius"] * math.sin(startAngle*(1-textPercentage)+endAngle*textPercentage)
         fontsize = 14
         offset = fontsize * 0.8
         normalOffset = (-counterleft[0]*offset, -counterleft[1]*offset)
+        # normalOffset = (0, 0)
         finalTextPos = (startX + normalOffset[0] + textOffset[0], startY + normalOffset[1] + textOffset[1])
         print(startX,startY,hx-counterleft[0]*offset+textOffset[0], hy-counterleft[1] *offset + textOffset[1])
+        print(-counterleft[0]*offset, -counterleft[1]*offset, counterleft, offset)
+        finalTextPos = (px - counterleft[0]*offset + textOffset[0], py -counterleft[1]*offset + textOffset[1])
         a += text(name, finalTextPos, fontsize, color)
         #a  += text(name, (hx - counterleft[0] * offset + textOffset[0], hy - counterleft[1] * offset + textOffset[1]), 14, color)
     return a
@@ -227,7 +238,7 @@ def circle(cx, cy):
 def dblcircle(cx, cy):
     strokeColor = defaultColor
     v = f'\t<ellipse stroke="{strokeColor}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="30" ry="30"/>\n'
-    v += f'\n\t<ellipse stroke="{strokeColor}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="25" ry="25"/>\n'
+    v += f'\t<ellipse stroke="{strokeColor}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="25" ry="25"/>\n'
     return v
 
 def stroke(ax, ay, bx, by, strokeColor=None):

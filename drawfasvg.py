@@ -34,8 +34,7 @@ if __name__ == "__main__":
     accept = {}
     last_text_pct = 0.5
     last_offset = (0, 0)
-    color_saturation = 1
-    color = "#ffffff"
+    last_color = "#ffffff"
     with open(filename, "r") as file:
         f = file.readlines()
         for i in range(len(f)):
@@ -43,6 +42,7 @@ if __name__ == "__main__":
             if first[0] == "size" and len(first) > 2:
                 width = int(first[1])
                 height = int(first[2])
+                inferSize = False
             elif first[0] == "#":
                 continue #ignore #
             elif first[0] == "option" and len(first) > 1:
@@ -50,8 +50,6 @@ if __name__ == "__main__":
                     displayAllStates = True
                 if first[1] == "displayTicMarks":
                     displayTicMarks = True
-                if first[1] == "inferSize":
-                    inferSize = True
                 if first[1] == "extendWidth" and len(first) > 2:
                     ds.END_X_SPACING += int(first[2])
                 if first[1] == "extendHeight" and len(first) > 2:
@@ -72,24 +70,22 @@ if __name__ == "__main__":
                     last_text_pct = float(first[1])
             elif first[0] == "color":
                 if len(first) > 1:
-                    color = first[1]
+                    last_color = first[1]
             elif len(first) > 2:
                 if len(first) > 3 and first[0] == first[1]: # edge that goes to itself
                     #color = f"#{int(255*color_saturation):02x}{int(255*color_saturation):02x}{int(255*color_saturation):02x}"
-                    e = ds.Edge(first[0], first[1], first[2], last_offset, last_text_pct, color, first[3])
+                    e = ds.Edge(first[0], first[1], first[2], last_offset, last_text_pct, last_color, first[3])
                     edges.append(e)
                     last_text_pct = 0.5
                     last_offset = (0, 0)
-                    color_saturation = 1
-                    color = "#ffffff"
+                    last_color = "#ffffff"
                 else:
                     #color = f"#{int(255*color_saturation):02x}{int(255*color_saturation):02x}{int(255*color_saturation):02x}"
-                    e = ds.Edge(first[0], first[1], first[2], last_offset, last_text_pct, color)
+                    e = ds.Edge(first[0], first[1], first[2], last_offset, last_text_pct, last_color)
                     edges.append(e)
                     last_text_pct = 0.5
                     last_offset = (0, 0)
-                    color_saturation = 1
-                    color = "#ffffff"
+                    last_color = "#ffffff"
 
 
 
@@ -99,6 +95,7 @@ if __name__ == "__main__":
     # num_states = 4,5 then 3x2
     # num_states = 6,7 then 4x2
     num_states = {}
+    num_states[0] = (0,0)
     num_states[1] = (1,1)
     num_states[2] = (1,1)
     num_states[3] = (2,2)
@@ -113,7 +110,7 @@ if __name__ == "__main__":
         for n in names.keys():
             w1 = int(n)%10
             if (int(n)//10)%2 == 0:
-                w1 += 0.5
+                w1 += 1
             max_state = max(max_state, w1)
         width = max_state + 1 # value 12 means width 3
     if height == -1 or inferSize: #infer height from largest /10 value

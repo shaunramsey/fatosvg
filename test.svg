@@ -1,30 +1,40 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "https://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
-<svg width="240" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<svg width="390" height="390" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
 	<polygon stroke="#ffffff" stroke-width="1" points="10.000,10.000 28.787,28.787"/>
 	<polygon fill="#ffffff" stroke-width="1" points="28.787,28.787 19.191,25.971 25.971,19.191"/>
+	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 70.318,72.036 A 205.577,205.577 0 0 1 70.318,327.964"/>
+	<polygon fill="#ffffff" stroke-width="1" points="70.318,327.964 72.028,318.111 79.533,324.080"/>
+	<text fill="#ffffff" stroke="#ffffff" x="122.000" y="203.500" font-family="Courier New" font-size="14">e</text>
+	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 29.682,327.964 A 205.577,205.577 0 0 1 29.682,72.036"/>
+	<polygon fill="#ffffff" stroke-width="1" points="29.682,72.036 27.972,81.889 20.467,75.920"/>
+	<text fill="#ffffff" stroke="#ffffff" x="-30.400" y="203.500" font-family="Courier New" font-size="14">d</text>
+	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 106.185,176.826 A 86.587,86.587 0 0 1 170.172,48.853"/>
+	<polygon fill="#ffffff" stroke-width="1" points="170.172,48.853 162.120,54.783 160.831,45.281"/>
+	<text fill="#ffffff" stroke="#ffffff" x="90.145" y="94.422" font-family="Courier New" font-size="14">c</text>
+	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 218.815,73.174 A 86.587,86.587 0 0 1 154.828,201.147"/>
+	<polygon fill="#ffffff" stroke-width="1" points="154.828,201.147 162.880,195.217 164.169,204.719"/>
+	<text fill="#ffffff" stroke="#ffffff" x="226.455" y="162.578" font-family="Courier New" font-size="14">d</text>
 	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 62.367,78.282 A 20.000,20.000 0 1 1 37.633,78.282"/>
 	<polygon fill="#ffffff" stroke-width="1" points="37.633,78.282 35.119,87.961 28.130,81.396"/>
 	<text fill="#ffffff" stroke="#ffffff" x="45.800" y="124.500" font-family="Courier New" font-size="14">a</text>
-	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 70.560,71.821 A 241.875,241.875 0 0 1 119.879,170.460"/>
-	<polygon fill="#ffffff" stroke-width="1" points="119.879,170.460 113.184,163.032 122.512,160.812"/>
-
-	<text fill="#ffffff" stroke="#ffffff" x="106.734" y="116.783" font-family="Courier New" font-size="14">b</text>
-	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 130.121,170.460 A 241.875,241.875 0 0 1 179.440,71.821"/>
-	<polygon fill="#ffffff" stroke-width="1" points="179.440,71.821 177.516,81.634 170.143,75.503"/>
-
-	<text fill="#ffffff" stroke="#ffffff" x="131.466" y="116.783" font-family="Courier New" font-size="14">a,b</text>
-	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 171.718,62.367 A 20.000,20.000 0 1 1 171.718,37.633"/>
-	<polygon fill="#ffffff" stroke-width="1" points="171.718,37.633 162.039,35.119 168.604,28.130"/>
-	<text fill="#ffffff" stroke="#ffffff" x="106.400" y="53.500" font-family="Courier New" font-size="14">a,b</text>
+	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 72.036,29.682 A 205.577,205.577 0 0 1 327.964,29.682"/>
+	<polygon fill="#ffffff" stroke-width="1" points="327.964,29.682 318.111,27.972 324.080,20.467"/>
+	<text fill="#ffffff" stroke="#ffffff" x="195.800" y="-22.700" font-family="Courier New" font-size="14">b</text>
+	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 112.633,171.718 A 20.000,20.000 0 1 1 137.367,171.718"/>
+	<polygon fill="#ffffff" stroke-width="1" points="137.367,171.718 139.881,162.039 146.870,168.604"/>
+	<text fill="#ffffff" stroke="#ffffff" x="120.800" y="132.500" font-family="Courier New" font-size="14">3</text>
 	<ellipse stroke="#ffffff" stroke-width="1" fill="none" cx="50.000" cy="50.000" rx="30" ry="30"/>
 	<text fill="#ffffff" stroke="#ffffff" x="43.400" y="55.500" font-family="Courier New" font-size="22">A</text>
+	<ellipse stroke="#ffffff" stroke-width="1" fill="none" cx="50.000" cy="350.000" rx="30" ry="30"/>
+	<text fill="#ffffff" stroke="#ffffff" x="43.400" y="355.500" font-family="Courier New" font-size="22">D</text>
+	<ellipse stroke="#ffffff" stroke-width="1" fill="none" cx="125.000" cy="200.000" rx="30" ry="30"/>
+	<text fill="#ffffff" stroke="#ffffff" x="118.400" y="205.500" font-family="Courier New" font-size="22">C</text>
 	<ellipse stroke="#ffffff" stroke-width="1" fill="none" cx="200.000" cy="50.000" rx="30" ry="30"/>
 	<text fill="#ffffff" stroke="#ffffff" x="186.800" y="55.500" font-family="Courier New" font-size="22">hr</text>
-	<ellipse stroke="#ffffff" stroke-width="1" fill="none" cx="125.000" cy="200.000" rx="30" ry="30"/>
-
-	<ellipse stroke="#ffffff" stroke-width="1" fill="none" cx="125.000" cy="200.000" rx="25" ry="25"/>
-	<text fill="#ffffff" stroke="#ffffff" x="118.400" y="205.500" font-family="Courier New" font-size="22">B</text>
+	<ellipse stroke="#ffffff" stroke-width="1" fill="none" cx="350.000" cy="50.000" rx="30" ry="30"/>
+	<ellipse stroke="#ffffff" stroke-width="1" fill="none" cx="350.000" cy="50.000" rx="25" ry="25"/>
+	<text fill="#ffffff" stroke="#ffffff" x="343.400" y="55.500" font-family="Courier New" font-size="22">B</text>
 </svg>
