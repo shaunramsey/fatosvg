@@ -3,7 +3,8 @@
 
 import math
 
-defaultColor = "#ffffff"
+# defaultColor = "#ffffff"
+defaultColor = "#000000"
 SPACING = 150
 START_SPACING = 50
 ODD_LINE_SPACING = 0.5*SPACING
@@ -49,7 +50,7 @@ def nameToPosition(name, invnames, positions):
          
 
 class Edge:
-    def __init__(self, i1, i2, name, textOffset, textPct, color, pos=None):
+    def __init__(self, i1, i2, name, textOffset, textPct, color, bend = 0, pos=None):
         self.i1 = i1
         self.i2 = i2 # this could the node's name
         self.name = name
@@ -57,6 +58,7 @@ class Edge:
         self.textOffset = textOffset
         self.color = color
         self.pos = pos
+        self.bend = bend
 
     def __str__(self):
         return f"Edge({self.i1}, {self.i2}, {self.name}, {self.textOffset}, {self.color}, {self.pos})"
@@ -137,25 +139,36 @@ def arrowToSelf(cx, cy, name, textOffset, pos, color):
     # print(a, sx, sy, ex, ey, sa, ea)
     a += arrowhead(ex, ey, ea + math.pi / 2 - 0.15, color) 
 
-    a += text(name, (label_offset[0] + textOffset[0], label_offset[1] + textOffset[1]), fontsize) 
+    a += text(name, (label_offset[0] + textOffset[0], label_offset[1] + textOffset[1]), fontsize, color) 
 
     return a
 
+def getFinalTextPos(textPercentage, offset, center, radius, sA, eA, textOffset):
+    while eA < sA:
+        eA += 2*math.pi
+    avgAngle = sA*(1-textPercentage) + textPercentage*eA
+    px = center[0] + radius * math.cos(avgAngle)
+    py = center[1] + radius * math.sin(avgAngle)
+    print(px, py)
+    counterleft = (math.cos(avgAngle), math.sin(avgAngle))
+    return (px - counterleft[0]*offset + textOffset[0], py -counterleft[1]*offset + textOffset[1])
+        
+     
 
-
-def arrowfromto(c1x, c1y, c2x, c2y, textOffset, textPercentage, name, color):
+def arrowfromto(c1x, c1y, c2x, c2y, textOffset, textPercentage, name, color, bendOffset):
     dx = (c2x - c1x)
     dy = (c2y - c1y)
 
     size = math.sqrt(dx*dx+dy*dy)
     counterleft = (-dy / size, dx / size)
-    print(f"counter left is {counterleft}")
+    # print(f"counter left is {counterleft}")
     # clockright = (dy / size, dx / size)
     # -dy, dx is counter clockwise left
     hx = (c1x + c2x)*0.5
     hy = (c1y + c2y)*0.5 # half way point
 
-    offset = 15 #+ bendOffset
+    offset = 15 + bendOffset
+    # print(f"my total bend is {offset}=15+{bendOffset}")
     px = hx - counterleft[0] * offset
     py = hy - counterleft[1] * offset
     s = 1
@@ -193,7 +206,10 @@ def arrowfromto(c1x, c1y, c2x, c2y, textOffset, textPercentage, name, color):
         # print(f"weighted: {startAngle*(1-textPercentage)+endAngle*textPercentage}")
         fontsize = 14
         offset = fontsize * 0.8
-        finalTextPos = (px - counterleft[0]*offset + textOffset[0], py -counterleft[1]*offset + textOffset[1])
+        if textPercentage == 0.5:
+            finalTextPos = (px - counterleft[0]*offset + textOffset[0], py -counterleft[1]*offset + textOffset[1])
+        else:
+            finalTextPos = getFinalTextPos(textPercentage,offset, (d["x"], d["y"]), d["radius"], startAngle, endAngle, textOffset)
         a += text(name, finalTextPos, fontsize, color)
     return a
     #file.write(circle(sx,sy))
@@ -294,26 +310,21 @@ def drawEdge(edge, invnames, positions, states):
     return drawFrom(edge, invnames, positions, states)
 
 def drawFrom(edge, invnames, positions, states):
-    name = edge.name
     i1 = edge.i1
     i2 = edge.i2
-    textOffset = edge.textOffset
-    textPct = edge.textPercentage
-    pos = edge.pos
-    color = edge.color
 
     if i1 == None or i2 == None:
          return
     if(i1 == i2): # same state, draw a loop
         states[i1] = nameToPosition(i1, invnames, positions)
-        a = arrowToSelf(states[i1][0], states[i1][1], name, textOffset, pos, color)
+        a = arrowToSelf(states[i1][0], states[i1][1], edge.name, edge.textOffset, edge.pos, edge.color)
         return a
     
     a = nameToPosition(i1, invnames, positions)
     b = nameToPosition(i2, invnames, positions)
     states[i1] = a
     states[i2] = b
-    a = arrowfromto( a[0], a[1], b[0], b[1], textOffset, textPct, name, color)
+    a = arrowfromto( a[0], a[1], b[0], b[1], edge.textOffset, edge.textPercentage, edge.name, edge.color, edge.bend)
     return a
 
 def drawTicMarks(width, height, TIC_SPACE = 25, TIC_WIDTH = 5):

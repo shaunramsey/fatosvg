@@ -10,19 +10,19 @@
 	<text fill="#ffffff" stroke="#ffffff" x="72.000" y="203.500" font-family="Courier New" font-size="14">e</text>
 	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 44.643,320.484 A 757.500,757.500 0 0 1 44.643,79.516"/>
 	<polygon fill="#ffffff" stroke-width="1" points="44.643,79.516 47.981,88.943 38.514,87.417"/>
-	<text fill="#ffffff" stroke="#ffffff" x="19.600" y="203.500" font-family="Courier New" font-size="14">d</text>
-	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 130.121,170.460 A 241.875,241.875 0 0 1 179.440,71.821"/>
-	<polygon fill="#ffffff" stroke-width="1" points="179.440,71.821 177.516,81.634 170.143,75.503"/>
-	<text fill="#ffffff" stroke="#ffffff" x="134.866" y="116.783" font-family="Courier New" font-size="14">c</text>
+	<text fill="#ffffff" stroke="#ffffff" x="19.600" y="203.500" font-family="Courier New" font-size="14">c</text>
+	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 106.185,176.826 A 86.587,86.587 0 0 1 170.172,48.853"/>
+	<polygon fill="#ffffff" stroke-width="1" points="170.172,48.853 162.120,54.783 160.831,45.281"/>
+	<text fill="#ffffff" stroke="#ffffff" x="139.906" y="72.872" font-family="Courier New" font-size="14">c</text>
 	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 194.879,79.540 A 241.875,241.875 0 0 1 145.560,178.179"/>
 	<polygon fill="#ffffff" stroke-width="1" points="145.560,178.179 147.484,168.366 154.857,174.497"/>
 	<text fill="#ffffff" stroke="#ffffff" x="181.734" y="140.217" font-family="Courier New" font-size="14">d</text>
-	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 62.367,78.282 A 20.000,20.000 0 1 1 37.633,78.282"/>
-	<polygon fill="#ffffff" stroke-width="1" points="37.633,78.282 35.119,87.961 28.130,81.396"/>
-	<text fill="#ffffff" stroke="#ffffff" x="45.800" y="124.500" font-family="Courier New" font-size="14">a</text>
-	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 79.516,44.643 A 757.500,757.500 0 0 1 320.484,44.643"/>
-	<polygon fill="#ffffff" stroke-width="1" points="320.484,44.643 311.057,47.981 312.583,38.514"/>
-	<text fill="#ffffff" stroke="#ffffff" x="195.800" y="27.300" font-family="Courier New" font-size="14">b</text>
+	<path stroke="#9900bb" stroke-width="1" fill="none" d="M 62.367,78.282 A 20.000,20.000 0 1 1 37.633,78.282"/>
+	<polygon fill="#9900bb" stroke-width="1" points="37.633,78.282 35.119,87.961 28.130,81.396"/>
+	<text fill="#9900bb" stroke="#9900bb" x="45.800" y="124.500" font-family="Courier New" font-size="14">a</text>
+	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 78.674,41.197 A 462.500,462.500 0 0 1 321.326,41.197"/>
+	<polygon fill="#ffffff" stroke-width="1" points="321.326,41.197 311.600,43.521 314.115,34.269"/>
+	<text fill="#ffffff" stroke="#ffffff" x="195.800" y="17.300" font-family="Courier New" font-size="14">b</text>
 	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 112.633,171.718 A 20.000,20.000 0 1 1 137.367,171.718"/>
 	<polygon fill="#ffffff" stroke-width="1" points="137.367,171.718 139.881,162.039 146.870,168.604"/>
 	<text fill="#ffffff" stroke="#ffffff" x="120.800" y="132.500" font-family="Courier New" font-size="14">3</text>

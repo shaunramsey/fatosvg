@@ -25,8 +25,7 @@ if __name__ == "__main__":
     inferSize = True
 
     ds.SPACING = 150
-    ds.color = "white"
-
+    ds.defaultColor = "#ffffff"
     edges = []
     states = {}
     names = {} #look up the position to get the name
@@ -34,7 +33,9 @@ if __name__ == "__main__":
     accept = {}
     last_text_pct = 0.5
     last_offset = (0, 0)
-    last_color = "#ffffff"
+    last_color = ds.defaultColor
+    last_bend = 0
+
     with open(filename, "r") as file:
         f = file.readlines()
         for i in range(len(f)):
@@ -54,7 +55,8 @@ if __name__ == "__main__":
                     ds.END_X_SPACING += int(first[2])
                 if first[1] == "extendHeight" and len(first) > 2:
                     ds.END_Y_SPACING += int(first[2])
-
+            elif first[0] == "bend":
+                last_bend = int(first[1])
             elif first[0] == "acc":
                 accept[first[1]] = True
             elif first[0] == "name":
@@ -72,20 +74,16 @@ if __name__ == "__main__":
                 if len(first) > 1:
                     last_color = first[1]
             elif len(first) > 2:
+                pos = None
                 if len(first) > 3 and first[0] == first[1]: # edge that goes to itself
+                    pos = first[3]
                     #color = f"#{int(255*color_saturation):02x}{int(255*color_saturation):02x}{int(255*color_saturation):02x}"
-                    e = ds.Edge(first[0], first[1], first[2], last_offset, last_text_pct, last_color, first[3])
-                    edges.append(e)
-                    last_text_pct = 0.5
-                    last_offset = (0, 0)
-                    last_color = "#ffffff"
-                else:
-                    #color = f"#{int(255*color_saturation):02x}{int(255*color_saturation):02x}{int(255*color_saturation):02x}"
-                    e = ds.Edge(first[0], first[1], first[2], last_offset, last_text_pct, last_color)
-                    edges.append(e)
-                    last_text_pct = 0.5
-                    last_offset = (0, 0)
-                    last_color = "#ffffff"
+                e = ds.Edge(first[0], first[1], first[2], last_offset, last_text_pct, last_color, last_bend, pos)
+                edges.append(e)
+                last_text_pct = 0.5
+                last_offset = (0, 0)
+                last_color = ds.defaultColor
+                last_bend = 0
 
 
 
@@ -164,7 +162,7 @@ if __name__ == "__main__":
 
 
     out = ds.front(width,height)
-    out += ds.arrowfromto(10, 10,50,50,(0,0), 0.5, "straight", 1)
+    out += ds.arrowfromto(10, 10,50,50,(0,0), 0.5, "straight", 1, 0)
     if displayTicMarks:
         out += ds.drawTicMarks(width, height, 50)
 

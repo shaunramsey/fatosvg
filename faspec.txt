@@ -2,11 +2,16 @@
 name 11 hr
 name 20 C
 name 30 D
+# pos 11 
 A D e
-D A d
+D A c
+textPct 0.8
+bend 50
 C hr c
 hr C d
+color #9900bb
 A A a S
+bend 10
 A B b
 acc B
 C C 3 N
