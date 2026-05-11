@@ -155,7 +155,7 @@ def arrowfromto(c1x, c1y, c2x, c2y, textOffset, textPercentage, name, color):
     hx = (c1x + c2x)*0.5
     hy = (c1y + c2y)*0.5 # half way point
 
-    offset = 65 #+ bendOffset
+    offset = 15 #+ bendOffset
     px = hx - counterleft[0] * offset
     py = hy - counterleft[1] * offset
     s = 1
@@ -188,26 +188,13 @@ def arrowfromto(c1x, c1y, c2x, c2y, textOffset, textPercentage, name, color):
     # print(a, sx, sy, ex, ey, sa, ea)
     a += arrowhead(ex, ey, ea + math.pi / 2, color)
     if name != None:
-        print(textPercentage, textOffset, name)
-        print(f"halfx {hx}, {hy} angles {startAngle} {endAngle}")
-        print(f"weighted: {startAngle*(1-textPercentage)+endAngle*textPercentage}")
-
-        while endAngle < startAngle:
-             endAngle += 2* math.pi
-        print(f"weighted: {startAngle*(1-textPercentage)+endAngle*textPercentage}")
-        
-        startX = d["x"] + d["radius"] * math.cos(startAngle*(1-textPercentage)+endAngle*textPercentage)
-        startY = d["y"] + d["radius"] * math.sin(startAngle*(1-textPercentage)+endAngle*textPercentage)
+        # print(textPercentage, textOffset, name)
+        # print(f"halfx {hx}, {hy} angles {startAngle} {endAngle}")
+        # print(f"weighted: {startAngle*(1-textPercentage)+endAngle*textPercentage}")
         fontsize = 14
         offset = fontsize * 0.8
-        normalOffset = (-counterleft[0]*offset, -counterleft[1]*offset)
-        # normalOffset = (0, 0)
-        finalTextPos = (startX + normalOffset[0] + textOffset[0], startY + normalOffset[1] + textOffset[1])
-        print(startX,startY,hx-counterleft[0]*offset+textOffset[0], hy-counterleft[1] *offset + textOffset[1])
-        print(-counterleft[0]*offset, -counterleft[1]*offset, counterleft, offset)
         finalTextPos = (px - counterleft[0]*offset + textOffset[0], py -counterleft[1]*offset + textOffset[1])
         a += text(name, finalTextPos, fontsize, color)
-        #a  += text(name, (hx - counterleft[0] * offset + textOffset[0], hy - counterleft[1] * offset + textOffset[1]), 14, color)
     return a
     #file.write(circle(sx,sy))
 
