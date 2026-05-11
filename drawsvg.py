@@ -15,7 +15,6 @@ END_Y_SPACING = 40 # 84 allows for an end circle and text
 def fixed(v, n):
     return f"{v:.3f}"
 
-
 def frontmatter(width,height):
     return f"""<?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "https://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -23,6 +22,7 @@ def frontmatter(width,height):
 <svg width="{width}" height="{height}" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
 """
+
 def front(width, height):
    return frontmatter((width-1)*SPACING + START_SPACING + END_X_SPACING, (height-1)*SPACING + START_SPACING + END_Y_SPACING) 
 
@@ -48,7 +48,6 @@ def nameToPosition(name, invnames, positions):
     # print(f"nameToPosition: name={name}, pos={pos}, invnames={invnames}, positions={positions}")
     return pos
          
-
 class Edge:
     def __init__(self, i1, i2, name, textOffset, textPct, color, bend = 0, pos=None):
         self.i1 = i1
@@ -96,7 +95,6 @@ def arrowhead(bx, by, theta, strokeColor=None):
     t3y = by - multx * math.sin(theta + al)
     retval =  f'\t<polygon fill="{strokeColor}" stroke-width="1" points="{bx:.3f},{by:.3f} {t2x:.3f},{t2y:.3f} {t3x:.3f},{t3y:.3f}"/>\n'
     return retval
-
 
 def arrowToSelf(cx, cy, name, textOffset, pos, color):
     fontsize = 14
@@ -153,8 +151,6 @@ def getFinalTextPos(textPercentage, offset, center, radius, sA, eA, textOffset):
     counterleft = (math.cos(avgAngle), math.sin(avgAngle))
     return (px - counterleft[0]*offset + textOffset[0], py -counterleft[1]*offset + textOffset[1])
         
-     
-
 def arrowfromto(c1x, c1y, c2x, c2y, textOffset, textPercentage, name, color, bendOffset):
     dx = (c2x - c1x)
     dy = (c2y - c1y)
@@ -215,7 +211,6 @@ def arrowfromto(c1x, c1y, c2x, c2y, textOffset, textPercentage, name, color, ben
     #file.write(circle(sx,sy))
 
 
-
 def text(str, pos, size, textColor = None):
     if textColor == None:
          textColor = defaultColor
@@ -248,7 +243,6 @@ def stroke(ax, ay, bx, by, strokeColor=None):
     if strokeColor == None:
         strokeColor = defaultColor
     return f'\t<polygon stroke="{strokeColor}" stroke-width="1" points="{ax:.3f},{ay:.3f} {bx:.3f},{by:.3f}"/>\n'
-
 
 def arc(x, y, radius, startAngle, endAngle, isReversed, strokeColor=None):
     _svgData = ""
