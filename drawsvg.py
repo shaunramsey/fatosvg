@@ -37,7 +37,7 @@ def nameToPosition(name, invnames, positions):
     pos = None
     if name in invnames:
         stateNum = invnames[name]
-        pos = stateNumberToLocation(stateNum)
+        pos = positions[str(stateNum)][1] 
     else: # find the first open position in positions
         for p in positions.keys():
             if not positions[p][0]: # if this position is not taken
@@ -147,7 +147,6 @@ def getFinalTextPos(textPercentage, offset, center, radius, sA, eA, textOffset):
     avgAngle = sA*(1-textPercentage) + textPercentage*eA
     px = center[0] + radius * math.cos(avgAngle)
     py = center[1] + radius * math.sin(avgAngle)
-    print(px, py)
     counterleft = (math.cos(avgAngle), math.sin(avgAngle))
     return (px - counterleft[0]*offset + textOffset[0], py -counterleft[1]*offset + textOffset[1])
         
@@ -287,7 +286,7 @@ def stateNumberToLocation(n):
     if ay%2 != 0:
         ax += ODD_LINE_SPACING
     # print(f"stateNumber:{n} ax={ax} ay={ay*SPACING+START_SPACING}")
-    return (ax, ay * SPACING + START_SPACING)
+    return [ax, ay * SPACING + START_SPACING]
 
 def drawState(name, pos, names, accept=False):
     c = circle(pos[0], pos[1])
@@ -306,7 +305,6 @@ def drawEdge(edge, invnames, positions, states):
 def drawFrom(edge, invnames, positions, states):
     i1 = edge.i1
     i2 = edge.i2
-
     if i1 == None or i2 == None:
          return
     if(i1 == i2): # same state, draw a loop
@@ -332,24 +330,32 @@ def drawTicMarks(width, height, TIC_SPACE = 25, TIC_WIDTH = 5):
         out += mypoly
     return out
 
-def drawAllStates(width, height, nameLookup, acceptStates):
+def drawAllStates(width, height, nameLookup, acceptStates, positionOffsets):
     pts = []
     names = []
     print(" [*] DRAWING ALL STATES")
     for i in range(0, height, 2):
 
         for j in range(width):
-            pts.append( ( SPACING * j + START_SPACING, SPACING * i + START_SPACING) )
-            names.append(f"{i+1}{j}")
+            name = f"{i+1}{j}"
+            pts.append( [ SPACING * j + START_SPACING, SPACING * i + START_SPACING] )
+            if name in positionOffsets:
+                pts[-1][0] += positionOffsets[name][0]
+                pts[-1][1] += positionOffsets[name][1]
+            names.append(name)
       
-        if height%2 == 0:
-            for j in range(width-1):
-                pts.append( ( SPACING * j + START_SPACING + ODD_LINE_SPACING, SPACING * (i+1) + START_SPACING) )
-                names.append(f"{i+2}{j}")
+        for j in range(width-1):
+            name = f"{i+2}{j}"
+            pts.append( [ SPACING * j + START_SPACING + ODD_LINE_SPACING, SPACING * (i+1) + START_SPACING] )
+            if name in positionOffsets:
+                pts[-1][0] += positionOffsets[name][0]
+                pts[-1][1] += positionOffsets[name][1]
+            names.append(name)
+
 
 
     out = ""
-    print(acceptStates)
+    # print(acceptStates)
     for i in range(len(pts)):
         if names[i] in acceptStates:
             out += drawState(names[i], pts[i], nameLookup, True)

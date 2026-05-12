@@ -1,7 +1,11 @@
 # a*b
+# option displayAllStates
+start 12 # 10 is default
 name 11 hr
 name 20 C
 name 30 D
+posOffset 11 0 40
+posOffset 10 20 20
 # pos 11 
 A D e
 D A c

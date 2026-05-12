@@ -26,10 +26,12 @@ if __name__ == "__main__":
 
     ds.SPACING = 150
     ds.defaultColor = "#ffffff"
+    startState = "10"
     edges = []
     states = {}
     names = {} #look up the position to get the name
     invnames = {} #look up name to get the position
+    positionOffsets = {} #name has position offset 
     accept = {}
     last_text_pct = 0.5
     last_offset = (0, 0)
@@ -59,10 +61,16 @@ if __name__ == "__main__":
                 last_bend = int(first[1])
             elif first[0] == "acc":
                 accept[first[1]] = True
+            elif first[0] == "start":
+                if len(first) > 1:
+                    startState = first[1]
             elif first[0] == "name":
                 if len(first) > 2:
                     names[first[1]] = first[2]
                     invnames[first[2]] = first[1]
+            elif first[0] == "posOffset":
+                if len(first) > 3:
+                    positionOffsets[first[1]] = (int(first[2]), int(first[3]))
             elif first[0] == "textOffset":
                 if len(first) > 2:
                     last_offset = (int(first[1]), int(first[2]))
@@ -134,7 +142,9 @@ if __name__ == "__main__":
         for i in range(w):
             positions[f"{j+1}{i}"] = [False, ds.stateNumberToLocation(10+j*10+i)]
     # print("pos:", positions)
-
+    for i in positionOffsets:
+        positions[i][1][0] += positionOffsets[i][0]
+        positions[i][1][1] += positionOffsets[i][1]
     for i in names:
         if i in positions:
             positions[i][0] = True
@@ -162,12 +172,15 @@ if __name__ == "__main__":
 
 
     out = ds.front(width,height)
-    out += ds.arrowfromto(10, 10,50,50,(0,0), 0.5, "straight", 1, 0)
+
+    startLineOffset = 50
+    startPos = positions[startState][1]
+    out += ds.arrowfromto(startPos[0] - startLineOffset, startPos[1] - startLineOffset, startPos[0], startPos[1], (0,0), 0.5, "straight", 1, 0)
     if displayTicMarks:
         out += ds.drawTicMarks(width, height, 50)
 
     if displayAllStates:
-        out += ds.drawAllStates(width, height, names, accept)
+        out += ds.drawAllStates(width, height, names, accept, positionOffsets)
     else:
         states = {}
         for i in edges:
