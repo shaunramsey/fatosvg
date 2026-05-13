@@ -1,5 +1,6 @@
 # a*b
 # option displayAllStates
+option displayTicMarks
 start 12 # 10 is default
 name 11 hr
 name 20 C

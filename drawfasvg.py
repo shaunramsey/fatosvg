@@ -166,10 +166,9 @@ if __name__ == "__main__":
     print(f" (*) Creating svg with width={width} and height={height}")
     print(f"   (-) End x spacing: {ds.END_X_SPACING} end y spacing: {ds.END_Y_SPACING}")
     print(f"   (-) # of Unique States = {len(unique_names)}")
+    print(f"   (-) # of Positions = {len(positions)}")
 
   
-
-
 
     out = ds.front(width,height)
 

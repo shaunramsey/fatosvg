@@ -5,6 +5,22 @@
 
 	<polygon stroke="#ffffff" stroke-width="1" points="300.000,0.000 328.787,28.787"/>
 	<polygon fill="#ffffff" stroke-width="1" points="328.787,28.787 319.191,25.971 325.971,19.191"/>
+	<polygon fill="white" stroke-width="1" points="-5,0 0,5, 5,0"/>
+	<polygon fill="white" stroke-width="1" points="45,0 50,5, 55,0"/>
+	<polygon fill="white" stroke-width="1" points="95,0 100,5, 105,0"/>
+	<polygon fill="white" stroke-width="1" points="145,0 150,5, 155,0"/>
+	<polygon fill="white" stroke-width="1" points="195,0 200,5, 205,0"/>
+	<polygon fill="white" stroke-width="1" points="245,0 250,5, 255,0"/>
+	<polygon fill="white" stroke-width="1" points="295,0 300,5, 305,0"/>
+	<polygon fill="white" stroke-width="1" points="345,0 350,5, 355,0"/>
+	<polygon fill="white" stroke-width="1" points="0,-5 5,0, 0,5"/>
+	<polygon fill="white" stroke-width="1" points="0,45 5,50, 0,55"/>
+	<polygon fill="white" stroke-width="1" points="0,95 5,100, 0,105"/>
+	<polygon fill="white" stroke-width="1" points="0,145 5,150, 0,155"/>
+	<polygon fill="white" stroke-width="1" points="0,195 5,200, 0,205"/>
+	<polygon fill="white" stroke-width="1" points="0,245 5,250, 0,255"/>
+	<polygon fill="white" stroke-width="1" points="0,295 5,300, 0,305"/>
+	<polygon fill="white" stroke-width="1" points="0,345 5,350, 0,355"/>
 	<path stroke="#ffffff" stroke-width="1" fill="none" d="M 73.562,99.785 A 664.167,664.167 0 0 1 57.760,321.024"/>
 	<polygon fill="#ffffff" stroke-width="1" points="57.760,321.024 55.180,311.362 64.496,313.633"/>
 	<text fill="#ffffff" stroke="#ffffff" x="81.933" y="215.367" font-family="Courier New" font-size="14">e</text>
