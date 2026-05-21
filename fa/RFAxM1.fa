@@ -1,4 +1,5 @@
-RED GREEN s_and_t
-textOffset 50 0
-GREEN YELLOW !s_and_t
-YELLOW RED t
+option extendWidth 30
+RED GRN s_and_t
+textOffset 40 0
+GRN YEL !s_and_t
+YEL RED t

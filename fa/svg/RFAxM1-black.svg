@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "https://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
-<svg width="240" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<svg width="270" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
 	<polygon stroke="black" stroke-width="1" points="0.000,0.000 28.787,28.787"/>
 	<polygon fill="black" stroke-width="1" points="28.787,28.787 19.191,25.971 25.971,19.191"/>
@@ -10,14 +10,14 @@
 	<text fill="black" stroke="black" x="95.600" y="27.300" font-family="Courier New" font-size="14">s_and_t</text>
 	<path stroke="black" stroke-width="1" fill="none" d="M 194.879,79.540 A 241.875,241.875 0 0 1 145.560,178.179"/>
 	<polygon fill="black" stroke-width="1" points="145.560,178.179 147.484,168.366 154.857,174.497"/>
-	<text fill="black" stroke="black" x="202.334" y="140.217" font-family="Courier New" font-size="14">!s_and_t</text>
+	<text fill="black" stroke="black" x="192.334" y="140.217" font-family="Courier New" font-size="14">!s_and_t</text>
 	<path stroke="black" stroke-width="1" fill="none" d="M 104.440,178.179 A 241.875,241.875 0 0 1 55.121,79.540"/>
 	<polygon fill="black" stroke-width="1" points="55.121,79.540 61.816,86.968 52.488,89.188"/>
 	<text fill="black" stroke="black" x="59.866" y="140.217" font-family="Courier New" font-size="14">t</text>
 	<ellipse stroke="black" stroke-width="1" fill="none" cx="50.000" cy="50.000" rx="30" ry="30"/>
 	<text fill="black" stroke="black" x="30.200" y="55.500" font-family="Courier New" font-size="22">RED</text>
 	<ellipse stroke="black" stroke-width="1" fill="none" cx="200.000" cy="50.000" rx="30" ry="30"/>
-	<text fill="black" stroke="black" x="167.000" y="55.500" font-family="Courier New" font-size="22">GREEN</text>
+	<text fill="black" stroke="black" x="180.200" y="55.500" font-family="Courier New" font-size="22">GRN</text>
 	<ellipse stroke="black" stroke-width="1" fill="none" cx="125.000" cy="200.000" rx="30" ry="30"/>
-	<text fill="black" stroke="black" x="85.400" y="205.500" font-family="Courier New" font-size="22">YELLOW</text>
+	<text fill="black" stroke="black" x="105.200" y="205.500" font-family="Courier New" font-size="22">YEL</text>
 </svg>
