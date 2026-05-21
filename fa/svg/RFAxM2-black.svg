@@ -1,0 +1,25 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "https://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg width="240" height="210" version="1.1" xmlns="http://www.w3.org/2000/svg">
+
+	<polygon stroke="black" stroke-width="1" points="0.000,0.000 28.787,28.787"/>
+	<polygon fill="black" stroke-width="1" points="28.787,28.787 19.191,25.971 25.971,19.191"/>
+	<path stroke="black" stroke-width="1" fill="none" d="M 78.469,40.633 A 195.000,195.000 0 0 1 171.531,40.633"/>
+	<polygon fill="black" stroke-width="1" points="171.531,40.633 161.865,43.195 164.153,33.883"/>
+	<text fill="black" stroke="black" x="120.800" y="27.300" font-family="Courier New" font-size="14">0</text>
+	<path stroke="black" stroke-width="1" fill="none" d="M 171.531,59.367 A 195.000,195.000 0 0 1 78.469,59.367"/>
+	<polygon fill="black" stroke-width="1" points="78.469,59.367 88.135,56.805 85.847,66.117"/>
+	<text fill="black" stroke="black" x="120.800" y="79.700" font-family="Courier New" font-size="14">0</text>
+	<path stroke="black" stroke-width="1" fill="none" d="M 62.367,78.282 A 20.000,20.000 0 1 1 37.633,78.282"/>
+	<polygon fill="black" stroke-width="1" points="37.633,78.282 35.119,87.961 28.130,81.396"/>
+	<text fill="black" stroke="black" x="45.800" y="124.500" font-family="Courier New" font-size="14">1</text>
+	<path stroke="black" stroke-width="1" fill="none" d="M 212.367,78.282 A 20.000,20.000 0 1 1 187.633,78.282"/>
+	<polygon fill="black" stroke-width="1" points="187.633,78.282 185.119,87.961 178.130,81.396"/>
+	<text fill="black" stroke="black" x="195.800" y="124.500" font-family="Courier New" font-size="14">1</text>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="50.000" cy="50.000" rx="30" ry="30"/>
+	<text fill="black" stroke="black" x="43.400" y="55.500" font-family="Courier New" font-size="22">A</text>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="200.000" cy="50.000" rx="30" ry="30"/>
+	<ellipse stroke="black" stroke-width="1" fill="none" cx="200.000" cy="50.000" rx="25" ry="25"/>
+	<text fill="black" stroke="black" x="193.400" y="55.500" font-family="Courier New" font-size="22">B</text>
+</svg>

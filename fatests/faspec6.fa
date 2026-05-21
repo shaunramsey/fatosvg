@@ -1,5 +1,6 @@
 # size 3 2
 # option displayAllStates
+option defaultColor #ffffff
 option inferSize
 option displayTicMarks
 option extendWidth 44

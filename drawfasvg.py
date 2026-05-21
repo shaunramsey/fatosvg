@@ -14,7 +14,7 @@ import drawsvg as ds
 import sys
 import os
 
-def renderFile(filename, outfilename):
+def renderFile(filename, outfilename, bookMode=True, verbose=False):
 
     if not os.path.isfile(filename):
         print(f"    [XXXX] {filename} is not a file")
@@ -40,9 +40,9 @@ def renderFile(filename, outfilename):
     displayAllStates = False
     displayTicMarks = False
     inferSize = True
-
+    if not bookMode:
+        ds.defaultColor = "#000000"
     ds.SPACING = 150
-    ds.defaultColor = "#ffffff"
     startState = "10"
     edges = []
     states = {}
@@ -76,6 +76,8 @@ def renderFile(filename, outfilename):
                     ds.END_X_SPACING += int(first[2])
                 if first[1] == "extendHeight" and len(first) > 2:
                     ds.END_Y_SPACING += int(first[2])
+                if first[1] == "defaultColor":
+                    ds.defaultColor = first[2]
             elif first[0] == "bend":
                 last_bend = int(first[1])
             elif first[0] == "acc":
@@ -170,14 +172,15 @@ def renderFile(filename, outfilename):
 
     #print(edges)  
 
-    if displayAllStates:
-        print(f"   [x] Option: Display All States is True")
-    if displayTicMarks:
-        print(f"   [x] Option: Display Tic Marks is True")
-    print(f"   (*) Creating svg with width={width} and height={height}")
-    print(f"     (-) End x spacing: {ds.END_X_SPACING} end y spacing: {ds.END_Y_SPACING}")
-    print(f"     (-) # of Unique States = {len(unique_names)}")
-    print(f"     (-) # of Positions = {len(positions)}")
+    if verbose:
+        if displayAllStates:
+            print(f"   [x] Option: Display All States is True")
+        if displayTicMarks:
+            print(f"   [x] Option: Display Tic Marks is True")
+        print(f"   (*) Creating svg with width={width} and height={height}")
+        print(f"     (-) End x spacing: {ds.END_X_SPACING} end y spacing: {ds.END_Y_SPACING}")
+        print(f"     (-) # of Unique States = {len(unique_names)}")
+        print(f"     (-) # of Positions = {len(positions)}")
 
   
 
@@ -232,6 +235,7 @@ if __name__ == "__main__":
     usingDefault = True
     outputDirectory = None #defaults to dirName/svg
     dirName = None
+    bookSettings = True # 
     if len(sys.argv) > 1:
         for i in range(len(sys.argv)):
             arg = sys.argv[i]
@@ -257,6 +261,8 @@ if __name__ == "__main__":
                     outputDirectory += "/"
                 if dirName != None: # input dir already specified
                     outfilenames = [f"{outputDirectory}{f[len(dirName):-2]}svg" for f in filenames]
+            if arg == "-nb": #turn off book specific settings
+                bookSettings = False
             if arg == "-h":
                 help()
                 sys.exit(0)
@@ -270,8 +276,32 @@ if __name__ == "__main__":
         sys.exit(0)
    
     for i in range(len(filenames)):
-        print(f" [*] Rendering {filenames[i]} to {outfilenames[i]}")
-        renderFile(filenames[i], outfilenames[i])
-
+        if bookSettings:
+            out = outfilenames[i][:-4] + "-white.svg"
+            print(f" [*] Rendering {filenames[i]} to {out}")
+            ds.defaultColor = "white"
+            renderFile(filenames[i], out)
+            
+            ds.defaultColor = "black"
+            out = outfilenames[i][:-4] + "-black.svg"
+            print(f" [*] Rendering {filenames[i]} to {out}")
+            renderFile(filenames[i], out)
+            #take outfilenames[i][:4] and produce the book cod
+            name = outfilenames[i][:-4]
+            path = name.split("/")
+            print("-"*60)
+            print(f"::: {{#fig-{path[-1]}}}")
+            print("::: {.light-content}")
+            print(f"![light](/images/RL/{path[-1]}-white.svg")
+            print(":::")
+            print("")
+            print("::: {.dark-content}")
+            print(f"![light](/images/RL/{path[-1]}-black.svg")
+            print(":::")
+            print("")
+            print("Caption")
+            print(":::")
+            print("-"*60)
+ 
    
 

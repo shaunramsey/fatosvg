@@ -333,7 +333,7 @@ def drawTicMarks(width, height, TIC_SPACE = 25, TIC_WIDTH = 5):
 def drawAllStates(width, height, nameLookup, acceptStates, positionOffsets):
     pts = []
     names = []
-    print(" [*] DRAWING ALL STATES")
+    print("     [*] DRAWING ALL STATES -- NO EDGES")
     for i in range(0, height, 2):
 
         for j in range(width):

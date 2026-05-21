@@ -1,0 +1,6 @@
+option extendHeight 60
+A B 0
+B A 0
+A A 1 S
+B B 1 S
+acc B
