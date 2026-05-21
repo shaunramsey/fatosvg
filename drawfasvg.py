@@ -43,6 +43,8 @@ def renderFile(filename, outfilename, bookMode=True, verbose=False):
     if not bookMode:
         ds.defaultColor = "#000000"
     ds.SPACING = 150
+    ds.END_X_SPACING = 40
+    ds.END_Y_SPACING = 40
     startState = "10"
     edges = []
     states = {}
@@ -292,11 +294,11 @@ if __name__ == "__main__":
             print("-"*60)
             print(f"::: {{#fig-{path[-1]}}}")
             print("::: {.light-content}")
-            print(f"![light](/images/RL/{path[-1]}-white.svg)")
+            print(f"![](/images/RL/{path[-1]}-black.svg)")
             print(":::")
             print("")
             print("::: {.dark-content}")
-            print(f"![light](/images/RL/{path[-1]}-black.svg)")
+            print(f"![](/images/RL/{path[-1]}-white.svg)")
             print(":::")
             print("")
             print("Caption")
