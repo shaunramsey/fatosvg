@@ -2,6 +2,8 @@ size 3 2
 # option displayAllStates
 # okay the rest are edges
 # aa*b
+start 11
+name 10 A
 acc 12
 10 20 a
 20 20 a

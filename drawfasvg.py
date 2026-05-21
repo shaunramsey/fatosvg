@@ -9,15 +9,32 @@
 # 
 
 # drawfasvg.py
-import math
+# import math
 import drawsvg as ds	
 import sys
+import os
 
-if __name__ == "__main__":
+def renderFile(filename, outfilename):
 
-    filename = "faspec.txt"
-    if len(sys.argv) > 1:
-        filename = sys.argv[1]
+    if not os.path.isfile(filename):
+        print(f"    [XXXX] {filename} is not a file")
+        return
+
+    # we may infer size from positions in names
+    # num_states = 1,2 then 1x1
+    # num_states = 3,  then 2x2
+    # num_states = 4,5 then 3x2
+    # num_states = 6,7 then 4x2
+    num_states = {}
+    num_states[0] = (0,0)
+    num_states[1] = (1,1)
+    num_states[2] = (2,1)
+    num_states[3] = (2,2)
+    num_states[4] = (3,2)
+    num_states[5] = (3,2)
+    num_states[6] = (4,2)
+    num_states[7] = (4,2)
+
     width = -1
     height = -1
     displayAllStates = False
@@ -42,6 +59,8 @@ if __name__ == "__main__":
         f = file.readlines()
         for i in range(len(f)):
             first = f[i].split()
+            if len(first) == 0:
+               continue
             if first[0] == "size" and len(first) > 2:
                 width = int(first[1])
                 height = int(first[2])
@@ -95,20 +114,7 @@ if __name__ == "__main__":
 
 
 
-    # we may infer size from positions in names
-    # num_states = 1,2 then 1x1
-    # num_states = 3,  then 2x2
-    # num_states = 4,5 then 3x2
-    # num_states = 6,7 then 4x2
-    num_states = {}
-    num_states[0] = (0,0)
-    num_states[1] = (1,1)
-    num_states[2] = (1,1)
-    num_states[3] = (2,2)
-    num_states[4] = (3,2)
-    num_states[5] = (3,2)
-    num_states[6] = (4,2)
-    num_states[7] = (4,2)
+ 
 
 
     if width == -1 or inferSize: #infer width from largest %10 value
@@ -132,8 +138,13 @@ if __name__ == "__main__":
         unique_names[i.i1] = True
         unique_names[i.i2] = True
 
-    width = max(width, num_states[len(unique_names)][0])
-    height = max(height, num_states[len(unique_names)][1])
+    if len(unique_names) in num_states:
+        width = max(width, num_states[len(unique_names)][0])
+        height = max(height, num_states[len(unique_names)][1])
+    else:
+        print(edges)
+        print("unique names", unique_names)
+        print(len(unique_names), num_states)
     # this is the width/height based on  if 'name' was listed for each state
     # print(" [*] inferred or given width/height is now ", width, height)
     positions = {}
@@ -160,13 +171,13 @@ if __name__ == "__main__":
     #print(edges)  
 
     if displayAllStates:
-        print(f" [x] Option: Display All States is True")
+        print(f"   [x] Option: Display All States is True")
     if displayTicMarks:
-        print(f" [x] Option: Display Tic Marks is True")
-    print(f" (*) Creating svg with width={width} and height={height}")
-    print(f"   (-) End x spacing: {ds.END_X_SPACING} end y spacing: {ds.END_Y_SPACING}")
-    print(f"   (-) # of Unique States = {len(unique_names)}")
-    print(f"   (-) # of Positions = {len(positions)}")
+        print(f"   [x] Option: Display Tic Marks is True")
+    print(f"   (*) Creating svg with width={width} and height={height}")
+    print(f"     (-) End x spacing: {ds.END_X_SPACING} end y spacing: {ds.END_Y_SPACING}")
+    print(f"     (-) # of Unique States = {len(unique_names)}")
+    print(f"     (-) # of Positions = {len(positions)}")
 
   
 
@@ -197,7 +208,70 @@ if __name__ == "__main__":
     out += ds.backmatter()
 
     # print(out)
-        
-    with open("test.svg", "w") as file:
+    with open(outfilename, "w") as file:
         file.write(out)
+
+def help():
+    print(" Welcome to the FA to SVG converter")
+    print("Command Line Options    Description")
+    print("-----------------------------------")
+    print("-i <filename> \t\tSpecify a singular input file name")
+    print("-o <filename> \t\tSpecify a singular output filename")
+    print("-d <dir_name> \t\tSpecify a directory of fa files as inputs")
+    print("-od <dr_name> \t\tSpecify the output directory for svg files default fa/svg")
+    print("-----------------------------------")
+    print("DEFAULTS")
+    print("-i fa/faspec.fa")
+    print("-o fa/svg/faspec.svg")
+    print("-od <dir_name>/svg     Defaults to the -d name as name/svg")
+
+if __name__ == "__main__":
+
+    filenames = ["fa/faspec.fa"]
+    outfilenames = ["fa/svg/faspec.svg"]
+    usingDefault = True
+    outputDirectory = None #defaults to dirName/svg
+    dirName = None
+    if len(sys.argv) > 1:
+        for i in range(len(sys.argv)):
+            arg = sys.argv[i]
+            if arg == "-i": #input filename
+                filenames[0] = sys.argv[i+1]
+                if usingDefault:
+                    outfilenames[0] = filenames[0][:-2] + "svg"
+                usingDefault = False
+            if arg == "-o":
+                outfilenames[0] = sys.argv[i+1]
+                usingDefault = False
+            if arg == "-d": # specify input directory
+                dirName = sys.argv[i+1]
+                if dirName[-1] != "/": # add it then
+                    dirName += "/"
+                if outputDirectory == None:
+                    outputDirectory = f"{dirName}svg/"
+                filenames = [dirName + f for f in os.listdir(dirName) if os.path.isfile(dirName + f)]
+                outfilenames = [f"{outputDirectory}{f[len(dirName):-2]}svg" for f in filenames]
+            if arg == "-od": # specify output directory
+                outputDirectory = sys.argv[i+1]
+                if outputDirectory[-1] != "/": # add it
+                    outputDirectory += "/"
+                if dirName != None: # input dir already specified
+                    outfilenames = [f"{outputDirectory}{f[len(dirName):-2]}svg" for f in filenames]
+            if arg == "-h":
+                help()
+                sys.exit(0)
+    
+                
+    if not os.path.isdir(outputDirectory):
+        help()
+        print("*"*80)
+        print(f"   [XXXX] {outputDirectory} is not an existing directory name.")
+        print("*"*80)
+        sys.exit(0)
+   
+    for i in range(len(filenames)):
+        print(f" [*] Rendering {filenames[i]} to {outfilenames[i]}")
+        renderFile(filenames[i], outfilenames[i])
+
+   
 

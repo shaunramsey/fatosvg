@@ -1,0 +1,8 @@
+# size 3 2
+# option displayAllStates
+# option displayTicMarks
+# okay the rest are edges
+# b(b*+a*)
+A B b
+B B a,b
+acc B
