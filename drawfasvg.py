@@ -18,8 +18,12 @@ def renderFile(filename, outfilename, bookMode=True, verbose=False):
 
     if not os.path.isfile(filename):
         print(f"    [XXXX] {filename} is not a file")
-        return
-
+        return -1
+    if os.path.isfile(outfilename): # don't generate unless filenamemod  is younger than outfilename crt
+        # print(os.path.getctime(outfilename), os.path.getmtime(filename))
+        if os.path.getctime(outfilename) > os.path.getmtime(filename):
+            print(f"   [****] {outfilename} is already up to date compared to {filename}")
+            return -1
     # we may infer size from positions in names
     # num_states = 1,2 then 1x1
     # num_states = 3,  then 2x2
@@ -269,8 +273,7 @@ if __name__ == "__main__":
                 help()
                 sys.exit(0)
     
-                
-    if not os.path.isdir(outputDirectory):
+    if outputDirectory != None and not os.path.isdir(outputDirectory):
         help()
         print("*"*80)
         print(f"   [XXXX] {outputDirectory} is not an existing directory name.")
@@ -282,28 +285,29 @@ if __name__ == "__main__":
             out = outfilenames[i][:-4] + "-white.svg"
             print(f" [*] Rendering {filenames[i]} to {out}")
             ds.defaultColor = "white"
-            renderFile(filenames[i], out)
+            result1 = renderFile(filenames[i], out)
             
             ds.defaultColor = "black"
             out = outfilenames[i][:-4] + "-black.svg"
             print(f" [*] Rendering {filenames[i]} to {out}")
-            renderFile(filenames[i], out)
+            result2 = renderFile(filenames[i], out)
             #take outfilenames[i][:4] and produce the book cod
-            name = outfilenames[i][:-4]
-            path = name.split("/")
-            print("-"*60)
-            print(f"::: {{#fig-{path[-1]}}}")
-            print("::: {.light-content}")
-            print(f"![](/images/RL/{path[-1]}-black.svg)")
-            print(":::")
-            print("")
-            print("::: {.dark-content}")
-            print(f"![](/images/RL/{path[-1]}-white.svg)")
-            print(":::")
-            print("")
-            print("Caption")
-            print(":::")
-            print("-"*60)
+            if result1 == None and result2 == None:
+                name = outfilenames[i][:-4]
+                path = name.split("/")
+                print("-"*60)
+                print(f"::: {{#fig-{path[-1]}}}")
+                print("::: {.light-content}")
+                print(f"![](/images/RL/{path[-1]}-black.svg)")
+                print(":::")
+                print("")
+                print("::: {.dark-content}")
+                print(f"![](/images/RL/{path[-1]}-white.svg)")
+                print(":::")
+                print("")
+                print("Caption")
+                print(":::")
+                print("-"*60)
  
    
 
