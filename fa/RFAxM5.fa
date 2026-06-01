@@ -1,0 +1,13 @@
+size 3 1
+option extendHeight -100
+name 10 st
+name 11 e0
+name 12 e01
+start 10
+acc e01
+st st 1 SE
+st e0 0
+e0 e0 0 SW
+e0 e01 1
+textOffset -10 0
+e01 e01 0,1 SW

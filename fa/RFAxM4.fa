@@ -1,0 +1,14 @@
+size 3 1
+option extendHeight -100
+name 10 st
+name 11 e0
+name 12 e01
+start 10
+acc e01
+st st 1 S
+st e0 0
+e0 e0 0 SW
+e0 e01 1
+e01 e0 0
+bend 60
+e01 st 1

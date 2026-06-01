@@ -1,0 +1,14 @@
+option extendHeight 40
+name 10 st
+name 11 c0
+name 12 c01 
+name 20 \0
+start 10
+acc c01
+st c0 0
+c0 c01 1
+c01 c01 0,1 S
+\0 \0 0,1 S
+st \0 1
+c0 \0 0
+

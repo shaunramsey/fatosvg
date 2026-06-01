@@ -1,0 +1,8 @@
+size 3 2
+option displayNamedStates
+name 10 st
+name 11 c0
+name 12 c01
+name 20 \0
+start 10
+acc 12

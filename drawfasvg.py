@@ -41,6 +41,7 @@ def renderFile(filename, outfilename, bookMode=True, verbose=False):
 
     width = -1
     height = -1
+    displayNamedStates = False
     displayAllStates = False
     displayTicMarks = False
     inferSize = True
@@ -76,6 +77,8 @@ def renderFile(filename, outfilename, bookMode=True, verbose=False):
             elif first[0] == "option" and len(first) > 1:
                 if first[1] == "displayAllStates":
                     displayAllStates = True
+                if first[1] == "displayNamedStates":
+                    displayNamedStates = True
                 if first[1] == "displayTicMarks":
                     displayTicMarks = True
                 if first[1] == "extendWidth" and len(first) > 2:
@@ -193,13 +196,16 @@ def renderFile(filename, outfilename, bookMode=True, verbose=False):
     out = ds.front(width,height)
 
     startLineOffset = 50
+    print(positions)
     startPos = positions[startState][1]
     out += ds.arrowfromto(startPos[0] - startLineOffset, startPos[1] - startLineOffset, startPos[0], startPos[1], (0,0), 0.5, "straight", 1, 0)
     if displayTicMarks:
         out += ds.drawTicMarks(width, height, 50)
 
     if displayAllStates:
-        out += ds.drawAllStates(width, height, names, accept, positionOffsets)
+        out += ds.drawAllStates(width, height, names, accept, positionOffsets, False)
+    elif displayNamedStates:
+        out += ds.drawAllStates(width, height, names, accept, positionOffsets, True)
     else:
         states = {}
         for i in edges:

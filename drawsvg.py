@@ -330,7 +330,7 @@ def drawTicMarks(width, height, TIC_SPACE = 25, TIC_WIDTH = 5):
         out += mypoly
     return out
 
-def drawAllStates(width, height, nameLookup, acceptStates, positionOffsets):
+def drawAllStates(width, height, nameLookup, acceptStates, positionOffsets, drawNamedStates):
     pts = []
     names = []
     print("     [*] DRAWING ALL STATES -- NO EDGES")
@@ -357,6 +357,8 @@ def drawAllStates(width, height, nameLookup, acceptStates, positionOffsets):
     out = ""
     # print(acceptStates)
     for i in range(len(pts)):
+        if drawNamedStates and names[i] not in nameLookup:
+            continue
         if names[i] in acceptStates:
             out += drawState(names[i], pts[i], nameLookup, True)
         else:
