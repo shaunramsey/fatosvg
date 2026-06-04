@@ -1,0 +1,24 @@
+size 4 2
+#option displayTicMarks
+name 20 D
+name 21 E
+name 22 F
+A B 1
+B C 1
+C C 1 SW
+bend -10
+A D 0
+D A 0
+bend -10
+textOffset 0 20
+D E 1
+color #999999
+E A 0
+textPct 0.3
+bend 10
+B D 0
+F C 0
+C F 0
+F F 1
+E F 1
+acc C

@@ -1,0 +1,20 @@
+start 11
+# option displayTicMarks
+name 20 E
+name 21 c01
+name 12 c0
+name 11 A
+posOffset 21 0 -50
+posOffset 20 0 -50
+
+A c0 0
+A E 1
+textOffset -10 0
+E E 0,1 W
+c0 c01 1
+bend 100
+c0 E 0
+c01 c0 0
+c01 E 1
+
+acc c01

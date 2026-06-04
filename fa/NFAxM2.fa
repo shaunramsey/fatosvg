@@ -1,0 +1,10 @@
+posOffset 20 75 -50
+posOffset 12 0 37
+A B 1
+
+B D 0
+acc D
+A C 1
+
+C D 1
+D D 0,1 S
