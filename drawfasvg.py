@@ -21,10 +21,14 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0):
         return -1
     if os.path.isfile(outfilename): # don't generate unless filenamemod  is younger than outfilename crt
         # print(os.path.getctime(outfilename), os.path.getmtime(filename))
-        if os.path.getctime(outfilename) > os.path.getmtime(filename):
+        if os.path.getmtime(outfilename) > os.path.getmtime(filename):
             if verbosity_level > 0:
                 print(f"   [****] {outfilename} is already up to date compared to {filename}")
             return -1
+        # else:
+        #     print(f" {os.path.getctime(outfilename)}, {os.path.getctime(filename)}")
+        #     print(f" {os.path.getmtime(outfilename)}, {os.path.getmtime(filename)}")
+
     # we may infer size from positions in names
     # num_states = 1,2 then 1x1
     # num_states = 3,  then 2x2
@@ -59,10 +63,13 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0):
     positionOffsets = {} #name has position offset 
     accept = {}
     hidden = {} # don't draw these states circles
+    hiddenEdges = []
     last_text_pct = 0.5
     last_offset = (0, 0)
     last_color = ds.defaultColor
     last_bend = 0
+    last_hide = False
+
 
     with open(filename, "r") as file:
         f = file.readlines()
@@ -95,6 +102,8 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0):
                 accept[first[1]] = True
             elif first[0] == "hide" and len(first) > 1:
                 hidden[first[1]] = True
+            elif first[0] == "hideedge":
+                last_hide = True
             elif first[0] == "start":
                 if len(first) > 1:
                     startState = first[1]
@@ -121,11 +130,14 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0):
                     pos = first[3]
                     #color = f"#{int(255*color_saturation):02x}{int(255*color_saturation):02x}{int(255*color_saturation):02x}"
                 e = ds.Edge(first[0], first[1], first[2], last_offset, last_text_pct, last_color, last_bend, pos)
+                if last_hide:
+                    hiddenEdges.append(e)
                 edges.append(e)
                 last_text_pct = 0.5
                 last_offset = (0, 0)
                 last_color = ds.defaultColor
                 last_bend = 0
+                last_hide = False
 
 
 
@@ -205,18 +217,24 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0):
     out += ds.arrowfromto(startPos[0] - startLineOffset, startPos[1] - startLineOffset, startPos[0], startPos[1], (0,0), 0.5, "straight", 1, 0)
     if displayTicMarks:
         out += ds.drawTicMarks(width, height, 50)
-
+    print("huh?")
     if displayAllStates:
         out += ds.drawAllStates(width, height, names, accept, positionOffsets, False)
     elif displayNamedStates:
         out += ds.drawAllStates(width, height, names, accept, positionOffsets, True)
     else:
         states = {}
+        # print("hidden edges: ", hiddenEdges)
         for i in edges:
             # print("drawing edge:", i.name, i)
-            out += ds.drawEdge(i, invnames, positions, states)
+            if i not in hiddenEdges:
+                out += ds.drawEdge(i, invnames, positions, states)
+            else:
+                states[i.i1] = ds.nameToPosition(i.i1, invnames, positions)
+                states[i.i2] = ds.nameToPosition(i.i2, invnames, positions)
         # print("states:", states)
         for i in states.keys():
+            # print(states)
             if i not in accept and i not in hidden:
                 out += ds.drawState(i, states[i], names, False)                
         for i in accept and i not in hidden:
