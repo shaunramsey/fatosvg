@@ -1,0 +1,48 @@
+size 4 3
+name 10 ABD
+name 12 BDF
+
+name 20 BE
+name 11 BEF
+name 21 BD
+name 32 CD
+name 30 CE
+posOffset 20 -75 0
+posOffset 21 100 0
+posOffset 10 250 250
+posOffset 11 -75 150
+posOffset 32 75 0
+
+
+ABD CD 0
+ABD BEF 1
+
+CD BD 0
+CD CE 1
+
+acc CE
+acc BEF
+acc CD
+
+
+CE BE 0
+CE CD 1
+
+BE CE 0 
+bend 40
+BE BDF 1
+
+BD BEF 1
+BD CD 0
+
+BEF CE 0
+BEF BDF 1
+
+BDF BEF 1
+bend 30
+BDF CD 0
+
+# C E F are acc
+
+acc BE
+acc BDF

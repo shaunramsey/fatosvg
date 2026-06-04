@@ -217,7 +217,7 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0):
     out += ds.arrowfromto(startPos[0] - startLineOffset, startPos[1] - startLineOffset, startPos[0], startPos[1], (0,0), 0.5, "straight", 1, 0)
     if displayTicMarks:
         out += ds.drawTicMarks(width, height, 50)
-    print("huh?")
+    
     if displayAllStates:
         out += ds.drawAllStates(width, height, names, accept, positionOffsets, False)
     elif displayNamedStates:
@@ -234,11 +234,12 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0):
                 states[i.i2] = ds.nameToPosition(i.i2, invnames, positions)
         # print("states:", states)
         for i in states.keys():
-            # print(states)
-            if i not in accept and i not in hidden:
+            # print(states, accept, hidden, i)
+            if (i not in accept) and not (i in hidden):
                 out += ds.drawState(i, states[i], names, False)                
-        for i in accept and i not in hidden:
-            out += ds.drawState(i, ds.nameToPosition(i, invnames, positions), names, True)
+        for i in accept:
+            if i not in hidden:
+                out += ds.drawState(i, ds.nameToPosition(i, invnames, positions), names, True)
 
 
 

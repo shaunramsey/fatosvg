@@ -10,7 +10,7 @@ posOffset 31 25 -75
 A B ~
 A D ~
 B F 1
-F F 0 E
+
 B B 1 SW
 B C 0 
 C C 1 S
@@ -19,7 +19,7 @@ D D 0 SW
 E D 1
 E E 0 E
 D E 1
-D F 0
+
 acc C
 acc E
 acc F
