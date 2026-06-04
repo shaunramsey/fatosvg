@@ -130,7 +130,7 @@ def arrowToSelf(cx, cy, name, textOffset, pos, color):
  
     startAngle = math.atan2(cy - center_offset[1], cx - center_offset[0]) + r/30
     endAngle = math.atan2(cy - center_offset[1], cx - center_offset[0]) - r/30
-    #print(f"Start: {startAngle} end: {endAngle}")
+    # print(f"Start: {startAngle} end: {endAngle}")
  
     a, sx, sy, ex, ey, sa, ea = arc(center_offset[0], center_offset[1], 20, startAngle, endAngle, 0, color)
     # f = a 
@@ -186,10 +186,10 @@ def arrowfromto(c1x, c1y, c2x, c2y, textOffset, textPercentage, name, color, ben
     d = circleFromThreePoints(c1x, c1y, c2x, c2y, px, py)  
     #return circle(px, py)
     #return circle(d["x"],d["y"])  
-    #print("Circle", d)
+    # print("Circle", d)
     startAngle = math.atan2(c1y - d["y"], c1x - d["x"]) + 30/d["radius"]
     endAngle = math.atan2(c2y - d["y"], c2x - d["x"]) - 30/d["radius"]
-    #print(f"Start: {startAngle} end: {endAngle}")
+    # print(f"Start: {startAngle} end: {endAngle}")
  
     a, sx, sy, ex, ey, sa, ea = arc(d["x"], d["y"], d["radius"], startAngle, endAngle, 0, color)
     # f = a 
@@ -295,7 +295,7 @@ def drawState(name, pos, names, accept=False):
     stateName = name
     if name in names:
          stateName = names[name]
-         #print(f"Found name for {name} in names, using {stateName}")
+         # (f"Found name for {name} in names, using {stateName}")
     t = text(stateName, pos, 22)
     return c + t
 

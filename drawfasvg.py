@@ -14,7 +14,7 @@ import drawsvg as ds
 import sys
 import os
 
-def renderFile(filename, outfilename, bookMode=True, verbose=False):
+def renderFile(filename, outfilename, bookMode=True, verbosity_level=0):
 
     if not os.path.isfile(filename):
         print(f"    [XXXX] {filename} is not a file")
@@ -22,7 +22,8 @@ def renderFile(filename, outfilename, bookMode=True, verbose=False):
     if os.path.isfile(outfilename): # don't generate unless filenamemod  is younger than outfilename crt
         # print(os.path.getctime(outfilename), os.path.getmtime(filename))
         if os.path.getctime(outfilename) > os.path.getmtime(filename):
-            print(f"   [****] {outfilename} is already up to date compared to {filename}")
+            if verbosity_level > 0:
+                print(f"   [****] {outfilename} is already up to date compared to {filename}")
             return -1
     # we may infer size from positions in names
     # num_states = 1,2 then 1x1
@@ -57,6 +58,7 @@ def renderFile(filename, outfilename, bookMode=True, verbose=False):
     invnames = {} #look up name to get the position
     positionOffsets = {} #name has position offset 
     accept = {}
+    hidden = {} # don't draw these states circles
     last_text_pct = 0.5
     last_offset = (0, 0)
     last_color = ds.defaultColor
@@ -91,6 +93,8 @@ def renderFile(filename, outfilename, bookMode=True, verbose=False):
                 last_bend = int(first[1])
             elif first[0] == "acc":
                 accept[first[1]] = True
+            elif first[0] == "hide" and len(first) > 1:
+                hidden[first[1]] = True
             elif first[0] == "start":
                 if len(first) > 1:
                     startState = first[1]
@@ -181,7 +185,7 @@ def renderFile(filename, outfilename, bookMode=True, verbose=False):
 
     #print(edges)  
 
-    if verbose:
+    if verbosity_level > 1:
         if displayAllStates:
             print(f"   [x] Option: Display All States is True")
         if displayTicMarks:
@@ -196,7 +200,7 @@ def renderFile(filename, outfilename, bookMode=True, verbose=False):
     out = ds.front(width,height)
 
     startLineOffset = 50
-    print(positions)
+    # print(positions)
     startPos = positions[startState][1]
     out += ds.arrowfromto(startPos[0] - startLineOffset, startPos[1] - startLineOffset, startPos[0], startPos[1], (0,0), 0.5, "straight", 1, 0)
     if displayTicMarks:
@@ -213,9 +217,9 @@ def renderFile(filename, outfilename, bookMode=True, verbose=False):
             out += ds.drawEdge(i, invnames, positions, states)
         # print("states:", states)
         for i in states.keys():
-            if i not in accept:
+            if i not in accept and i not in hidden:
                 out += ds.drawState(i, states[i], names, False)                
-        for i in accept:
+        for i in accept and i not in hidden:
             out += ds.drawState(i, ds.nameToPosition(i, invnames, positions), names, True)
 
 
@@ -248,6 +252,8 @@ if __name__ == "__main__":
     outputDirectory = None #defaults to dirName/svg
     dirName = None
     bookSettings = True # 
+    verbosity_level = 0 # 0 is silent, 1 is some info, 2 is more ... 10 is all DEBUG
+
     if len(sys.argv) > 1:
         for i in range(len(sys.argv)):
             arg = sys.argv[i]
@@ -286,22 +292,30 @@ if __name__ == "__main__":
         print("*"*80)
         sys.exit(0)
    
+    print(f" [*] Rendering up to [{len(filenames)}] '.fa' files that require updating.")    
+    newout = 0
     for i in range(len(filenames)):
         if bookSettings:
             out = outfilenames[i][:-4] + "-white.svg"
-            print(f" [*] Rendering {filenames[i]} to {out}")
+            if verbosity_level > 0:
+                print(f" [*] Rendering {filenames[i]} to {out}")
             ds.defaultColor = "white"
-            result1 = renderFile(filenames[i], out)
-            
+            result1 = renderFile(filenames[i], out, bookSettings, verbosity_level)
+            if result1 == None:
+                newout += 1
             ds.defaultColor = "black"
             out = outfilenames[i][:-4] + "-black.svg"
-            print(f" [*] Rendering {filenames[i]} to {out}")
-            result2 = renderFile(filenames[i], out)
+            if verbosity_level > 1:
+                print(f" [*] Rendering {filenames[i]} to {out}")
+            result2 = renderFile(filenames[i], out, bookSettings, verbosity_level)
+            if result2 == None:
+                newout += 1
             #take outfilenames[i][:4] and produce the book cod
             if result1 == None and result2 == None:
                 name = outfilenames[i][:-4]
                 path = name.split("/")
                 print("-"*60)
+                print("")
                 print(f"::: {{#fig-{path[-1]}}}")
                 print("::: {.light-content}")
                 print(f"![](/images/RL/{path[-1]}-black.svg)")
@@ -313,7 +327,9 @@ if __name__ == "__main__":
                 print("")
                 print("Caption")
                 print(":::")
+                print("")
                 print("-"*60)
- 
+    print(f" [*] Done rendering. [{newout}] new '.svg' files were created.")
+
    
 

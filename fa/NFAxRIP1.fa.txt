@@ -1,0 +1,4 @@
+
+hide A
+A B a
+A C b
