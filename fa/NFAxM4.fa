@@ -1,0 +1,10 @@
+A B 1
+textOffset 0 5
+B B 0,1 S
+B C 0
+A D 1
+textOffset -10 0
+D D 0,1 W
+D E 1
+acc C
+acc E

@@ -1,0 +1,18 @@
+# option displayTicMarks
+option extendWidth 20
+name 20 \0
+textOffset -10 0
+posOffset 11 -25 0
+posOffset 12 -25 0
+posOffset 21 -25 0
+\0 \0 0,1 W
+A \0 0
+A BD 1
+BD BDE 1
+BD BCD 0
+BDE BDE 1
+BDE BCD 0
+BCD BDE 1
+BCD BCD 0
+acc BDE
+acc BCD

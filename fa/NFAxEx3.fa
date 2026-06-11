@@ -1,0 +1,13 @@
+# option displayTicMarks
+option extendHeight -100
+name 10 A
+name 11 B
+name 12 C
+name 13 D
+textOffset 10 5
+A A a,b SE
+A B a
+B C b
+C D b
+acc B
+acc D

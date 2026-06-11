@@ -1,0 +1,22 @@
+#option displayTicMarks
+option extendHeight 0
+posOffset 10 0 100
+posOffset 11 -50 0
+posOffset 12 -75 0
+posOffset 20 25 0
+posOffset 21 0 0
+bend -10
+A B ~
+B C 0
+C B 0
+B B 1 W
+C C 1 E
+A D ~
+D D 0 W
+E E 0 E
+D E 1
+E D 1
+B D ~
+D B ~
+acc C
+acc E

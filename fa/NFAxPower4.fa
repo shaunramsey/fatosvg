@@ -1,0 +1,14 @@
+size 3 1 
+# option displayTicMarks
+option extendHeight -100
+start 10
+AB AB a S
+AB B b
+textOffset -5 0
+B B b SW
+bend 10
+B \0 a
+textOffset -15 0
+\0 \0 a,b SW
+acc AB
+acc B

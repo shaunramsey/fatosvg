@@ -1,0 +1,11 @@
+size 3 0
+option extendHeight -100
+#option displayTicMarks
+textOffset 0 5
+C C 0,1 S
+C E 1
+E F 1
+
+
+start 10
+acc F

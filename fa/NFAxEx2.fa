@@ -1,0 +1,18 @@
+name 20 C
+name 21 E
+name 22 F
+A B ~
+B D 0
+B B 1 S
+D B 0
+D D 1 S
+A C ~
+textOffset -10 0
+C C 0,1 W
+C E 1
+E F 1
+
+
+start 10
+acc B
+acc F
