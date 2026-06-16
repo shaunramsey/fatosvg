@@ -1,18 +1,18 @@
 # size 3 2
 # option displayAllStates
 option defaultColor #ffffff
-option inferSize
 option displayTicMarks
 option extendWidth 44
+# option highlightNode C
 # okay the rest are edges
 # b(b*+a*)
 name 20 hr
 textOffset 0 -5
 A B bbbbbbb|cat
-textPct 0.25
+textPct 0.40
 B A b
 C B b
-textPct 0.75
+textPct 0.80
 D B b
 color #9999ff
 A hr a
@@ -21,7 +21,7 @@ B C a|b|c
 C C a E
 acc C
 textOffset -10 -15
-textPct 0.4
+textPct 0.5
 B D b
 D D b E
 textOffset -10 0

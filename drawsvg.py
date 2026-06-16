@@ -299,10 +299,12 @@ def drawState(name, pos, names, accept=False):
     t = text(stateName, pos, 22)
     return c + t
 
-def drawEdge(edge, invnames, positions, states):
-    return drawFrom(edge, invnames, positions, states)
+def drawEdge(edge, invnames, positions, states, highlightNode):
+    return drawFrom(edge, invnames, positions, states, highlightNode)
 
-def drawFrom(edge, invnames, positions, states):
+
+# only highlightNodes' arrows are actually drawn, but we still set state of all
+def drawFrom(edge, invnames, positions, states, highlightNode):
     i1 = edge.i1
     i2 = edge.i2
     if i1 == None or i2 == None:
@@ -310,14 +312,20 @@ def drawFrom(edge, invnames, positions, states):
     if(i1 == i2): # same state, draw a loop
         states[i1] = nameToPosition(i1, invnames, positions)
         a = arrowToSelf(states[i1][0], states[i1][1], edge.name, edge.textOffset, edge.pos, edge.color)
-        return a
+        if highlightNode == None or highlightNode == i1 or highlightNode == i2:
+            return a
+        else:
+            return ""
     
     a = nameToPosition(i1, invnames, positions)
     b = nameToPosition(i2, invnames, positions)
     states[i1] = a
     states[i2] = b
     a = arrowfromto( a[0], a[1], b[0], b[1], edge.textOffset, edge.textPercentage, edge.name, edge.color, edge.bend)
-    return a
+    if highlightNode == None or highlightNode == i1 or highlightNode == i2:
+        return a
+    else:
+        return ""
 
 def drawTicMarks(width, height, TIC_SPACE = 25, TIC_WIDTH = 5):
     totalw, totalh = getDimensions(width, height)

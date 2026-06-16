@@ -14,14 +14,14 @@ import drawsvg as ds
 import sys
 import os
 
-def renderFile(filename, outfilename, bookMode=True, verbosity_level=0):
+def renderFile(filename, outfilename, bookMode=True, verbosity_level=0, forced=False):
 
     if not os.path.isfile(filename):
         print(f"    [XXXX] {filename} is not a file")
         return -1
     if os.path.isfile(outfilename): # don't generate unless filenamemod  is younger than outfilename crt
         # print(os.path.getctime(outfilename), os.path.getmtime(filename))
-        if os.path.getmtime(outfilename) > os.path.getmtime(filename):
+        if os.path.getmtime(outfilename) > os.path.getmtime(filename) and not forced:
             if verbosity_level > 0:
                 print(f"   [****] {outfilename} is already up to date compared to {filename}")
             return -1
@@ -69,7 +69,7 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0):
     last_color = ds.defaultColor
     last_bend = 0
     last_hide = False
-
+    highlightNode = None
 
     with open(filename, "r") as file:
         f = file.readlines()
@@ -86,16 +86,21 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0):
             elif first[0] == "option" and len(first) > 1:
                 if first[1] == "displayAllStates":
                     displayAllStates = True
-                if first[1] == "displayNamedStates":
+                elif first[1] == "displayNamedStates":
                     displayNamedStates = True
-                if first[1] == "displayTicMarks":
+                elif first[1] == "displayTicMarks":
                     displayTicMarks = True
-                if first[1] == "extendWidth" and len(first) > 2:
+                elif first[1] == "extendWidth" and len(first) > 2:
                     ds.END_X_SPACING += int(first[2])
-                if first[1] == "extendHeight" and len(first) > 2:
+                elif first[1] == "extendHeight" and len(first) > 2:
                     ds.END_Y_SPACING += int(first[2])
-                if first[1] == "defaultColor":
+                elif first[1] == "defaultColor":
                     ds.defaultColor = first[2]
+                elif first[1] == "highlightNode":
+                    highlightNode = first[2]
+                else:
+                    print(f" [XXX] option does not exist: ${f[i]}")
+                
             elif first[0] == "bend":
                 last_bend = int(first[1])
             elif first[0] == "acc":
@@ -211,34 +216,38 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0):
 
     out = ds.front(width,height)
 
+    # PRINT THE STARTING ARROW
     startLineOffset = 50
     # print(positions)
     startPos = positions[startState][1]
     out += ds.arrowfromto(startPos[0] - startLineOffset, startPos[1] - startLineOffset, startPos[0], startPos[1], (0,0), 0.5, "straight", 1, 0)
+    
+    # DISPLAY TIC MARKS
     if displayTicMarks:
         out += ds.drawTicMarks(width, height, 50)
-    
+
+    # DISPLAY ALL THE STATES OR ONLY NAMED STATES - NO TRANSITIONS
     if displayAllStates:
         out += ds.drawAllStates(width, height, names, accept, positionOffsets, False)
     elif displayNamedStates:
         out += ds.drawAllStates(width, height, names, accept, positionOffsets, True)
-    else:
+    else: # DRAW THE DIAGRAM WITH GIVEN OPTIONS
         states = {}
         # print("hidden edges: ", hiddenEdges)
         for i in edges:
             # print("drawing edge:", i.name, i)
             if i not in hiddenEdges:
-                out += ds.drawEdge(i, invnames, positions, states)
+                out += ds.drawEdge(i, invnames, positions, states, highlightNode)
             else:
                 states[i.i1] = ds.nameToPosition(i.i1, invnames, positions)
                 states[i.i2] = ds.nameToPosition(i.i2, invnames, positions)
         # print("states:", states)
         for i in states.keys():
             # print(states, accept, hidden, i)
-            if (i not in accept) and not (i in hidden):
+            if (i not in accept) and not (i in hidden) and (highlightNode == None or i == highlightNode):
                 out += ds.drawState(i, states[i], names, False)                
         for i in accept:
-            if i not in hidden:
+            if i not in hidden and (highlightNode == None or i == highlightNode):
                 out += ds.drawState(i, ds.nameToPosition(i, invnames, positions), names, True)
 
 
@@ -253,6 +262,7 @@ def help():
     print(" Welcome to the FA to SVG converter")
     print("Command Line Options    Description")
     print("-----------------------------------")
+    print("-f            \t\tForce create svg despite timestamps")
     print("-i <filename> \t\tSpecify a singular input file name")
     print("-o <filename> \t\tSpecify a singular output filename")
     print("-d <dir_name> \t\tSpecify a directory of fa files as inputs")
@@ -272,6 +282,7 @@ if __name__ == "__main__":
     dirName = None
     bookSettings = True # 
     verbosity_level = 0 # 0 is silent, 1 is some info, 2 is more ... 10 is all DEBUG
+    forced = False 
 
     if len(sys.argv) > 1:
         for i in range(len(sys.argv)):
@@ -303,6 +314,8 @@ if __name__ == "__main__":
             if arg == "-h":
                 help()
                 sys.exit(0)
+            if arg == "-f":
+                forced = True
     
     if outputDirectory != None and not os.path.isdir(outputDirectory):
         help()
@@ -319,14 +332,14 @@ if __name__ == "__main__":
             if verbosity_level > 0:
                 print(f" [*] Rendering {filenames[i]} to {out}")
             ds.defaultColor = "white"
-            result1 = renderFile(filenames[i], out, bookSettings, verbosity_level)
+            result1 = renderFile(filenames[i], out, bookSettings, verbosity_level, forced)
             if result1 == None:
                 newout += 1
             ds.defaultColor = "black"
             out = outfilenames[i][:-4] + "-black.svg"
             if verbosity_level > 1:
                 print(f" [*] Rendering {filenames[i]} to {out}")
-            result2 = renderFile(filenames[i], out, bookSettings, verbosity_level)
+            result2 = renderFile(filenames[i], out, bookSettings, verbosity_level, forced)
             if result2 == None:
                 newout += 1
             #take outfilenames[i][:4] and produce the book cod
