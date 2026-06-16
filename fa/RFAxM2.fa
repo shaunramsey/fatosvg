@@ -1,6 +1,8 @@
-option extendHeight 60
+option extendHeight 45
 A B 0
 B A 0
+textOffset 0 5
 A A 1 S
+textOffset 0 5
 B B 1 S
-acc B
+acc B 

@@ -1,4 +1,0 @@
-hide A
-hideedge
-A B a
-A C b
