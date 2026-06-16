@@ -224,7 +224,7 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0, forced=F
     
     # DISPLAY TIC MARKS
     if displayTicMarks:
-        out += ds.drawTicMarks(width, height, 50)
+        out += ds.drawTicMarks(width, height, 20)
 
     # DISPLAY ALL THE STATES OR ONLY NAMED STATES - NO TRANSITIONS
     if displayAllStates:
