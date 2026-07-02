@@ -1,0 +1,14 @@
+
+
+# option displayTicMarks
+# option highlightNode B
+option extendHeight -150
+name 12 E
+name 20 A
+name 21 B
+posOffset 20 0 -75
+posOffset 21 0 -75 
+
+S E (1+01*0)*01*
+
+acc E

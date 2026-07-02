@@ -1,7 +1,8 @@
 
 # option displayTicMarks
+option highlightNode B
 option extendHeight -25
-name 12 E 
+name 12 E
 name 20 A
 name 21 B
 posOffset 20 0 -75

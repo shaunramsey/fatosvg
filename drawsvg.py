@@ -227,13 +227,15 @@ def text(str, pos, size, textColor = None):
         ctr += 1
     return out
 
-def circle(cx, cy):
-    strokeColor = defaultColor
+def circle(cx, cy, strokeColor = None):
+    if strokeColor == None:
+        strokeColor = defaultColor
     return f'\t<ellipse stroke="{strokeColor}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="30" ry="30"/>\n'
 
 
-def dblcircle(cx, cy):
-    strokeColor = defaultColor
+def dblcircle(cx, cy, strokeColor=None):
+    if strokeColor == None:
+        strokeColor = defaultColor
     v = f'\t<ellipse stroke="{strokeColor}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="30" ry="30"/>\n'
     v += f'\t<ellipse stroke="{strokeColor}" stroke-width="1" fill="none" cx="{cx:.3f}" cy="{cy:.3f}" rx="25" ry="25"/>\n'
     return v
@@ -288,15 +290,17 @@ def stateNumberToLocation(n):
     # print(f"stateNumber:{n} ax={ax} ay={ay*SPACING+START_SPACING}")
     return [ax, ay * SPACING + START_SPACING]
 
-def drawState(name, pos, names, accept=False):
-    c = circle(pos[0], pos[1])
+def drawState(name, pos, names, accept=False, strokeColor = None):
+    if strokeColor == None:
+        strokeColor = defaultColor
+    c = circle(pos[0], pos[1], strokeColor)
     if accept:
-        c = dblcircle(pos[0], pos[1])
+        c = dblcircle(pos[0], pos[1], strokeColor)
     stateName = name
     if name in names:
          stateName = names[name]
          # (f"Found name for {name} in names, using {stateName}")
-    t = text(stateName, pos, 22)
+    t = text(stateName, pos, 22, strokeColor)
     return c + t
 
 def drawEdge(edge, invnames, positions, states, highlightNode):

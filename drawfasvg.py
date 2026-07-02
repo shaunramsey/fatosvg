@@ -13,6 +13,7 @@
 import drawsvg as ds	
 import sys
 import os
+ghostNodeColor = "#666666"
 
 def renderFile(filename, outfilename, bookMode=True, verbosity_level=0, forced=False):
 
@@ -220,7 +221,8 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0, forced=F
     startLineOffset = 50
     # print(positions)
     startPos = positions[startState][1]
-    out += ds.arrowfromto(startPos[0] - startLineOffset, startPos[1] - startLineOffset, startPos[0], startPos[1], (0,0), 0.5, "straight", 1, 0)
+    if highlightNode == None:
+        out += ds.arrowfromto(startPos[0] - startLineOffset, startPos[1] - startLineOffset, startPos[0], startPos[1], (0,0), 0.5, "straight", 1, 0)
     
     # DISPLAY TIC MARKS
     if displayTicMarks:
@@ -245,10 +247,14 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0, forced=F
         for i in states.keys():
             # print(states, accept, hidden, i)
             if (i not in accept) and not (i in hidden) and (highlightNode == None or i == highlightNode):
-                out += ds.drawState(i, states[i], names, False)                
+                out += ds.drawState(i, states[i], names, False)   
+            elif (i not in accept) and not (i in hidden):
+                out += ds.drawState(i, states[i], names, False, ghostNodeColor)             
         for i in accept:
             if i not in hidden and (highlightNode == None or i == highlightNode):
                 out += ds.drawState(i, ds.nameToPosition(i, invnames, positions), names, True)
+            elif (i not in hidden):
+                out += ds.drawState(i, ds.nameToPosition(i, invnames, positions), names, True, ghostNodeColor)
 
 
 
@@ -329,6 +335,7 @@ if __name__ == "__main__":
     for i in range(len(filenames)):
         if bookSettings:
             out = outfilenames[i][:-4] + "-white.svg"
+            ghostNodeColor = "#666666"
             if verbosity_level > 0:
                 print(f" [*] Rendering {filenames[i]} to {out}")
             ds.defaultColor = "white"
@@ -336,6 +343,7 @@ if __name__ == "__main__":
             if result1 == None:
                 newout += 1
             ds.defaultColor = "black"
+            ghostNodeColor = "#cccccc"
             out = outfilenames[i][:-4] + "-black.svg"
             if verbosity_level > 1:
                 print(f" [*] Rendering {filenames[i]} to {out}")
