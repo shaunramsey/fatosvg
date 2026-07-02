@@ -1,0 +1,5 @@
+
+#option displayTicMarks
+name 13 acc
+S acc a*ab*+(~+a*c)(b+ba*c)*(b+ba*ab*)
+accept acc

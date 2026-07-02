@@ -104,7 +104,9 @@ def renderFile(filename, outfilename, bookMode=True, verbosity_level=0, forced=F
                 
             elif first[0] == "bend":
                 last_bend = int(first[1])
-            elif first[0] == "acc":
+            elif first[0] == "acc" and "acc" not in invnames:
+                accept[first[1]] = True
+            elif first[0] == "accept":
                 accept[first[1]] = True
             elif first[0] == "hide" and len(first) > 1:
                 hidden[first[1]] = True

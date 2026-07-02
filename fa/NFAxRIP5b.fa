@@ -1,0 +1,23 @@
+
+# option displayTicMarks
+name 22 acc
+name 11 A
+S B ~
+textOffset 5 8
+B B a SE
+B C a
+textOffset 0 5
+C C b SW
+bend -10
+S D ~
+textOffset -5 0
+D D b W
+bend -10
+B D c
+bend -10
+D E b
+bend -10
+E B ~
+C acc ~
+E acc ~
+accept acc

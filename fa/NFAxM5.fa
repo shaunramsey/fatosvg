@@ -1,0 +1,16 @@
+
+# option displayTicMarks
+A B ~
+textOffset 5 8
+B B a SW
+B C a 
+textOffset 0 5
+C C b S
+A D ~
+textOffset -5 0
+D D b W
+B D c
+D E b
+E B ~
+acc C
+acc E
